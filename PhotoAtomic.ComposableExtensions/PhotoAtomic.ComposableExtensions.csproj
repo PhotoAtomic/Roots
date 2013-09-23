@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7A3C939B-C748-48EC-BA1F-30C338AA44EB}</ProjectGuid>
+    <ProjectGuid>{F528A192-3DAD-419D-9E39-CC88A7870006}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Roots.Persistence</RootNamespace>
-    <AssemblyName>Roots.Persistence</AssemblyName>
+    <RootNamespace>PhotoAtomic.ComposableExtensions</RootNamespace>
+    <AssemblyName>PhotoAtomic.ComposableExtensions</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -39,20 +40,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="QueryableAsyncExtensions.cs" />
-    <Compile Include="IAsyncRepository.cs" />
-    <Compile Include="IAsyncUnitOfWork.cs" />
-    <Compile Include="IQueryableAsyncExtensions.cs" />
-    <Compile Include="UnitOfWorkFactory.cs" />
-    <Compile Include="IRepository.cs" />
-    <Compile Include="IUnitOfWork.cs" />
-    <Compile Include="IUnitOfWorkFactory.cs" />
+    <Compile Include="ExtensionMapper.cs" />
+    <Compile Include="ExtensionMetadataAttribute.cs" />
+    <Compile Include="IExtensionMetadata.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PhotoAtomic.ComposableExtensions\PhotoAtomic.ComposableExtensions.csproj">
-      <Project>{f528a192-3dad-419d-9e39-cc88a7870006}</Project>
-      <Name>PhotoAtomic.ComposableExtensions</Name>
+    <ProjectReference Include="..\PhotoAtomic.Extensions\PhotoAtomic.Extensions.csproj">
+      <Project>{e23ec3e6-c17a-4384-bd2c-867976b73564}</Project>
+      <Name>PhotoAtomic.Extensions</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

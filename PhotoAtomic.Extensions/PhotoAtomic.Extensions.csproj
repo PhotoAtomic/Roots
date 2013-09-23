@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7A3C939B-C748-48EC-BA1F-30C338AA44EB}</ProjectGuid>
+    <ProjectGuid>{E23EC3E6-C17A-4384-BD2C-867976B73564}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Roots.Persistence</RootNamespace>
-    <AssemblyName>Roots.Persistence</AssemblyName>
+    <RootNamespace>PhotoAtomic.Extensions</RootNamespace>
+    <AssemblyName>PhotoAtomic.Extensions</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,21 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="QueryableAsyncExtensions.cs" />
-    <Compile Include="IAsyncRepository.cs" />
-    <Compile Include="IAsyncUnitOfWork.cs" />
-    <Compile Include="IQueryableAsyncExtensions.cs" />
-    <Compile Include="UnitOfWorkFactory.cs" />
-    <Compile Include="IRepository.cs" />
-    <Compile Include="IUnitOfWork.cs" />
-    <Compile Include="IUnitOfWorkFactory.cs" />
+    <Compile Include="ObjectExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PhotoAtomic.ComposableExtensions\PhotoAtomic.ComposableExtensions.csproj">
-      <Project>{f528a192-3dad-419d-9e39-cc88a7870006}</Project>
-      <Name>PhotoAtomic.ComposableExtensions</Name>
-    </ProjectReference>
+    <Compile Include="TypeExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

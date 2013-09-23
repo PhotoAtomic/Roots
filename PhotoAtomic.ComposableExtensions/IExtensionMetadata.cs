@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 
-namespace Roots.Persistence
-{
-
-
+namespace PhotoAtomic.ComposableExtensions
+{    
     public interface IExtensionMetadata
     {
         
-        Type Provider { get; set; }
+        Type Provider { get;}
     }
 }
