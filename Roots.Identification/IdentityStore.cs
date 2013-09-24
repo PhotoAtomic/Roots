@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Roots.Identification.RavenDb
+namespace Roots.Identification
 {
-    public class RavenDbIdentityStore : IIdentityStore
+    public class IdentityStore : IIdentityStore
     {
         public IUserLoginStore Logins
         {

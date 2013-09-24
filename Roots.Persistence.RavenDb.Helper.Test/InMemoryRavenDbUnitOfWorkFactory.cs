@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Roots.Identification.RavenDb.Test
+namespace Roots.Persistence.RavenDb.Helper.Test
 {
     public class InMemoryRavenDbUnitOfWorkFactory : RavenDbUnitOfWorkFactory
     {

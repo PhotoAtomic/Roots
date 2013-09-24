@@ -8,9 +8,9 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace Roots.Identification.RavenDb
+namespace Roots.Identification
 {
-    class UserStore : IUserStore
+    public class UserStore : IUserStore
     {
         private IUnitOfWorkFactory unitOfWorkFactory { get; set; }
 

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Roots.Identification.RavenDb
+namespace Roots.Identification
 {
     public class User : Roots.Domain.User, IUser
     {

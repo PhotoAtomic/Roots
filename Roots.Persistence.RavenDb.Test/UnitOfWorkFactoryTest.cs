@@ -4,7 +4,7 @@ using Moq;
 using Raven.Client;
 using Roots.Persistence.RavenDb;
 using Raven.Client.Document;
-using Roots.Identification.RavenDb.Test.Types;
+using Roots.Persistence.RavenDb.Test.Types;
 using Raven.Client.Connection;
 using SharpTestsEx;
 

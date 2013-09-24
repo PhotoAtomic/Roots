@@ -48,12 +48,17 @@
   <ItemGroup>
     <Compile Include="RavenDbAsyncRepository.cs" />
     <Compile Include="RavenDbAsyncUnitOfWork.cs" />
+    <Compile Include="RavenDbQueryableAsyncExtensions.cs" />
     <Compile Include="RavenDbRepository.cs" />
     <Compile Include="RavenDbUnitOfWork.cs" />
     <Compile Include="RavenDbUnitOfWorkFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PhotoAtomic.ComposableExtensions\PhotoAtomic.ComposableExtensions.csproj">
+      <Project>{f528a192-3dad-419d-9e39-cc88a7870006}</Project>
+      <Name>PhotoAtomic.ComposableExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PhotoAtomic.Reflection\PhotoAtomic.Reflection.csproj">
       <Project>{50c68791-06c1-4d21-8b33-800cec9b9351}</Project>
       <Name>PhotoAtomic.Reflection</Name>
@@ -69,6 +74,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
