@@ -8,41 +8,28 @@ namespace PhotoAtomic.Extensions
 {
     public static class TypeExtensions
     {
-        public static int? Specificity(this Type descendantType, Type baseType)
+        public static int? SpecificityDistance(this Type descendantType, Type baseType)
         {
-            
-            if(!baseType.IsAssignableFrom(descendantType)) return null;
 
-            int? interfacePathLength = null;
-            if(baseType.IsInterface){
-                if (baseType.IsAssignableFrom(descendantType) &&
-                   !baseType.IsAssignableFrom(descendantType.BaseType))
-                {
-                    interfacePathLength = 1;
-                }
-                else
-                {
-                    interfacePathLength = descendantType.BaseType.Specificity(baseType) + 1;
-                }
-
-                var minInterfacePath = descendantType
-                    .GetInterfaces()
-                    .Select(x => x.Specificity(baseType))
-                    .Where(x => x.HasValue);
-                   
-                    ////COMPLETE INTERFACES
-
-                //if (minInterfacePath.HasValue && minInterfacePath < interfacePathLength) minInterfacePath = interfacePathLength;
-            }
-
+            if (!baseType.IsAssignableFrom(descendantType)) return null;           
             if (descendantType == baseType) return 0;
+            if (descendantType.IsInterface && !baseType.IsInterface) return null;
 
-            int? classPathLength = descendantType.BaseType.Specificity(baseType) + 1;
+            var min = descendantType
+                .GetInterfacesOnType()
+                .Select(x => x.SpecificityDistance(baseType))
+                .Union(descendantType.BaseType.SpecificityDistance(baseType).AsEnumerable())
+                .Where(x=>x.HasValue)
+                .Min();
 
-            if (interfacePathLength.HasValue && classPathLength.HasValue) return Math.Min(classPathLength.Value,interfacePathLength.Value);
-            if (interfacePathLength.HasValue) return interfacePathLength.Value;
-            if (classPathLength.HasValue) return classPathLength.Value;
+            if (min.HasValue) return min.Value + 1;
             return null;
+            
+        }
+
+        public static IEnumerable<Type> GetInterfacesOnType(this Type type)
+        {
+            return type.GetInterfaces().Where(x => !x.IsAssignableFrom(type.BaseType));
         }
     }
 }

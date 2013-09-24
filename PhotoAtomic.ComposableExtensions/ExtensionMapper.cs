@@ -14,7 +14,7 @@ namespace PhotoAtomic.ComposableExtensions
     [Export]
     public class ExtensionMapper<TExtension>
     {
-
+        private Dictionary<Type, TExtension> cache = new Dictionary<Type, TExtension>();
         private class AssemblyNetNode
         {
             public AssemblyNetNode(Assembly baseAssembly)
@@ -94,9 +94,25 @@ namespace PhotoAtomic.ComposableExtensions
 
         public TExtension GetMapperByProvider(Type providerType) 
         {
-            return Extensions.Where(x => x.Metadata.Provider == providerType).SingleOrDefault().Value;
+
+            lock (cache)
+            {
+                TExtension extension;
+                if(cache.TryGetValue(providerType,out extension))  return extension;
+
+                extension = Extensions.Select(x => new
+                    {
+                        Distance = providerType.SpecificityDistance(x.Metadata.Provider),
+                        Extension = x
+                    })
+                    .Where(x => x.Distance.HasValue)
+                    .OrderBy(x => x.Distance)
+                    .Select(x => x.Extension)
+                    .FirstOrDefault().Value;
+
+                cache.Add(providerType, extension);
+                return extension;
+            }
         }
-
-
     }
 }
