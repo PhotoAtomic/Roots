@@ -11,10 +11,10 @@ namespace Roots.Domain
     public class User
     {
         public Guid Id { get; set; }
-        public string Name { get; set; }
+        public string UserName { get; set; }
         public Guid ConfirmationToken { get; set; }
 
-        public object[] LastName { get; set; }
+        public string LastName { get; set; }
 
         public string FirstName { get; set; }
     }

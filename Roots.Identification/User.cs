@@ -24,19 +24,13 @@ namespace Roots.Identification
 
         string IUser.UserName
         {
-            get { return UserName; }
-            set { UserName = value; }
-        }
-
-        public string UserName
-        {
             get
             {
-                return string.Format("{0} {1}", base.FirstName, base.LastName);
+                return UserName;
             }
             set
             {
-
+                UserName = value;
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
+using Roots.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,15 @@ namespace Roots.Identification
 {
     public class IdentityStore : IIdentityStore
     {
+        private readonly IUnitOfWorkFactory factory;
+
+
+        public IdentityStore(IUnitOfWorkFactory factory)
+        {
+            this.factory = factory;
+            Users = new UserStore(factory);
+        }
+
         public IUserLoginStore Logins
         {
             get { throw new NotImplementedException(); }
@@ -46,7 +56,8 @@ namespace Roots.Identification
 
         public IUserStore Users
         {
-            get { throw new NotImplementedException(); }
+            get;
+            private set;
         }
 
         public void Dispose()
