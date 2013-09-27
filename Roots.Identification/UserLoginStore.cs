@@ -16,7 +16,7 @@ namespace Roots.Identification
 
         public UserLoginStore(IAsyncUnitOfWork uow)
         {
-            
+
             this.uow = uow;
         }
 
@@ -64,21 +64,21 @@ namespace Roots.Identification
         public async Task<string> GetProviderKeyAsync(string userId, string loginProvider, System.Threading.CancellationToken cancellationToken)
         {
             var user = await uow.RepositoryOf<User>().GetByIdAsync(userId);
-                
+
             return user
                 .Logins
                 .Where(x => x.Provider == loginProvider)
-                .Select(x=>x.ProviderKey)
+                .Select(x => x.ProviderKey)
                 .SingleOrDefault();
         }
 
-        public Task<string> GetUserIdAsync(string loginProvider, string providerKey, System.Threading.CancellationToken cancellationToken)
+        public async Task<string> GetUserIdAsync(string loginProvider, string providerKey, System.Threading.CancellationToken cancellationToken)
         {
-            var userId = uow.RepositoryOf<User>()
+            var user = await uow.RepositoryOf<User>()
                 .Where(x => x.Logins.Any(y => y.Provider == loginProvider && y.ProviderKey == providerKey))
-                .Select(x=>((IUser)x).Id)
-                .SingleOrDefault();
-            return Task.FromResult(userId);
+                .SingleOrDefaultAsync();
+
+            return ((IUser)user).Id;
         }
 
         public async Task<IdentityResult> RemoveAsync(string userId, string loginProvider, string providerKey, System.Threading.CancellationToken cancellationToken)
@@ -86,7 +86,16 @@ namespace Roots.Identification
             try
             {
                 var user = await uow.RepositoryOf<User>().GetByIdAsync(userId);
-                await uow.RepositoryOf<User>().RemoveAsync(user);
+                if (user == null) return IdentityResult.Failed("userid not found");
+
+                var loginToRemove = user.Logins
+                    .Where(x => x.Provider == loginProvider && x.ProviderKey == providerKey)
+                    .SingleOrDefault();
+
+                if (loginToRemove == null) return IdentityResult.Failed("pair (loginProvider, providerKey) not found for the given user");
+
+                if (!user.Logins.Remove(loginToRemove)) return IdentityResult.Failed("for some reason it is not possible to remove the login from the given user");
+
                 return IdentityResult.Succeeded();
             }
             catch (Exception ex)
