@@ -67,6 +67,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RepositoryBaseTest.cs" />
+    <Compile Include="Types\EntityWithGuidId.cs" />
+    <Compile Include="Types\EntityWithStringId.cs" />
     <Compile Include="Types\TestClassBase.cs" />
     <Compile Include="Types\TestClassDerived.cs" />
     <Compile Include="UnitOfWorkFactoryTest.cs" />

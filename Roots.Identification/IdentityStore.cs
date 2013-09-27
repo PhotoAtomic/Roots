@@ -11,17 +11,20 @@ namespace Roots.Identification
     public class IdentityStore : IIdentityStore
     {
         private readonly IUnitOfWorkFactory factory;
-
+        private IAsyncUnitOfWork uow;
+                
 
         public IdentityStore(IUnitOfWorkFactory factory)
         {
             this.factory = factory;
-            Users = new UserStore(factory);
+            this.uow = factory.CreateAsyncNew();
+            Users = new UserStore(uow);
         }
 
         public IUserLoginStore Logins
         {
-            get { throw new NotImplementedException(); }
+            get;
+            private set;
         }
 
         public IRoleStore Roles
@@ -29,9 +32,17 @@ namespace Roots.Identification
             get { throw new NotImplementedException(); }
         }
 
-        public Task<IdentityResult> SaveChangesAsync(System.Threading.CancellationToken cancellationToken)
+        public async Task<IdentityResult> SaveChangesAsync(System.Threading.CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await uow.CommitAsync();
+                return IdentityResult.Succeeded();
+            }
+            catch (Exception ex)
+            {
+                return IdentityResult.Failed(ex.Message);
+            }
         }
 
         public IUserSecretStore Secrets
@@ -62,7 +73,7 @@ namespace Roots.Identification
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            uow.Dispose();
         }
     }
 }

@@ -8,8 +8,8 @@ namespace Roots.Persistence
 {
     public interface IUnitOfWorkFactory
     {
-        IUnitOfWork CreateNew();
+        IUnitOfWork CreateNew(IsolationLevel isolationLevel = IsolationLevel.None);
 
-        IAsyncUnitOfWork CreateAsyncNew();
+        IAsyncUnitOfWork CreateAsyncNew(IsolationLevel isolationLevel = IsolationLevel.None);
     }
 }

@@ -68,15 +68,15 @@ namespace Roots.Persistence.RavenDb
             return identityProperty.GetValue(o);            
         }
 
-        public IUnitOfWork CreateNew()
+        public IUnitOfWork CreateNew(IsolationLevel isolationLevel = IsolationLevel.None)
         {
-            return new RavenDbUnitOfWork(documentStore);
+            return new RavenDbUnitOfWork(documentStore, isolationLevel);
         }
 
 
-        public Roots.Persistence.IAsyncUnitOfWork CreateAsyncNew()
+        public Roots.Persistence.IAsyncUnitOfWork CreateAsyncNew(IsolationLevel isolationLevel = IsolationLevel.None)
         {
-            return new RavenDbAsyncUnitOfWork(documentStore);
+            return new RavenDbAsyncUnitOfWork(documentStore, isolationLevel);
         }
     }
 }

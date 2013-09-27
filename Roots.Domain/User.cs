@@ -17,5 +17,7 @@ namespace Roots.Domain
         public string LastName { get; set; }
 
         public string FirstName { get; set; }
+
+        public ICollection<Login> Logins { get; set; }
     }
 }

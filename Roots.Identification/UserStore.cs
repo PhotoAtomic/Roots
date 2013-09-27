@@ -12,66 +12,59 @@ namespace Roots.Identification
 {
     public class UserStore : IUserStore
     {
-        private IUnitOfWorkFactory unitOfWorkFactory { get; set; }
+        private IAsyncUnitOfWork uow;
 
-        public UserStore(IUnitOfWorkFactory unitOfWorkFactory)
+        public UserStore(IAsyncUnitOfWork uow)
         {
-            this.unitOfWorkFactory = unitOfWorkFactory;
+            
+            this.uow = uow;
         }
 
         public async Task<IdentityResult> CreateAsync(IUser user, CancellationToken cancellationToken)
         {
-            using (var uow = unitOfWorkFactory.CreateAsyncNew())
-            {
                 IUser systemUser = new User();
                 systemUser.Id = user.Id;
                 systemUser.UserName = user.UserName;
                 try
                 {
-                    await uow.RepositoryOf<User>().AddAsync((User)systemUser);
-                    await uow.CommitAsync();
+                    await uow.RepositoryOf<User>().AddAsync((User)systemUser);                    
                     return IdentityResult.Succeeded();
                 }
                 catch (Exception ex)
                 {
                     return IdentityResult.Failed(ex.Message);
                 }
-            }
+ 
         }
 
         public async Task<IdentityResult> DeleteAsync(string userId, CancellationToken cancellationToken)
         {
-            using (var uow = unitOfWorkFactory.CreateAsyncNew())
-            {
                 try
                 {
                     var user = await uow.RepositoryOf<User>().GetByIdAsync(userId);
                     if (user == null) return IdentityResult.Failed("User not found");
-                    await uow.RepositoryOf<User>().RemoveAsync(user);
-                    await uow.CommitAsync();
+                    await uow.RepositoryOf<User>().RemoveAsync(user);                    
                     return IdentityResult.Succeeded();
                 }
                 catch (Exception ex)
                 {
                     return IdentityResult.Failed(ex.Message);
                 }
-            }
+ 
         }
 
         public async Task<IUser> FindAsync(string userId, CancellationToken cancellationToken)
         {
-            using (var uow = unitOfWorkFactory.CreateAsyncNew())
-            {
                 return await uow.RepositoryOf<User>().GetByIdAsync(userId);
-            }
+ 
         }
 
         public async Task<IUser> FindByNameAsync(string userName, CancellationToken cancellationToken)
         {
-            using (var uow = unitOfWorkFactory.CreateAsyncNew())
-            {
-                return await uow.RepositoryOf<User>().Where(x => x.UserName == userName).SingleOrDefaultAsync();                
-            }
+
+            var repo = uow.RepositoryOf<User>();
+            return await repo.Where(x => x.UserName == userName).SingleOrDefaultAsync();                
+            
         }
 
 

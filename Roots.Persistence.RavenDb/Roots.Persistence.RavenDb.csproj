@@ -50,6 +50,7 @@
     <Compile Include="RavenDbAsyncUnitOfWork.cs" />
     <Compile Include="RavenDbQueryableAsyncExtensions.cs" />
     <Compile Include="RavenDbRepository.cs" />
+    <Compile Include="RavenDbRespositoryBase.cs" />
     <Compile Include="RavenDbUnitOfWork.cs" />
     <Compile Include="RavenDbUnitOfWorkFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

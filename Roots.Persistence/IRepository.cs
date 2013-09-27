@@ -7,9 +7,7 @@ namespace Roots.Persistence
 {
     public interface IRepository<T> : IQueryable<T>
     {
-        T GetById(ValueType id);
-
-        T GetById(string id);
+        T GetById(object id);
 
         void Add(T item);
 

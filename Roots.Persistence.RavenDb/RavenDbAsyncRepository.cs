@@ -2,30 +2,33 @@
 using Raven.Client.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Roots.Persistence.RavenDb
 {
-    public class RavenDbAsyncRepository<T> : IAsyncRepository<T>, IDisposable
+    public class RavenDbAsyncRepository<T> : RavenDbRespositoryBase<T>, IAsyncRepository<T>, IDisposable
     {
         private IAsyncDocumentSession documentSession;
-        private IRavenQueryable<T> repository;
-        public RavenDbAsyncRepository(IAsyncDocumentSession documentSession)
+               
+        public RavenDbAsyncRepository(IAsyncDocumentSession documentSession, Func<Type, PropertyInfo> getIdentityProperty, IsolationLevel isolationLevel = IsolationLevel.None)
+            : base(getIdentityProperty, isolationLevel)
         {
-            this.documentSession = documentSession;            
-            this.repository = documentSession.Query<T>();
+            this.documentSession = documentSession;
+            
         }
 
-        public Task<T> GetByIdAsync(ValueType id)
+        public Task<T> GetByIdAsync(object id)
         {
-            return documentSession.LoadAsync<T>(id);
-        }
+            if (id == null) throw new ArgumentNullException("id");
 
-        public Task<T> GetByIdAsync(string id)
-        {
-            return documentSession.LoadAsync<T>(id);
+            return InvokeByTargetType(id, 
+                x => documentSession.LoadAsync<T>(x), 
+                x => documentSession.LoadAsync<T>(x));
+            
         }
 
         public Task AddAsync(T item)
@@ -41,33 +44,37 @@ namespace Roots.Persistence.RavenDb
 
         public IEnumerator<T> GetEnumerator()
         {
-            return repository.GetEnumerator();
+            return Repository.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return ((System.Collections.IEnumerable)repository).GetEnumerator();
+            return ((System.Collections.IEnumerable)Repository).GetEnumerator();
         }
 
         public Type ElementType
         {
-            get { return repository.ElementType; }
+            get { return Repository.ElementType; }
         }
 
         public System.Linq.Expressions.Expression Expression
         {
-            get { return repository.Expression; }
+            get { return Repository.Expression; }
         }
 
         public IQueryProvider Provider
         {
-            get { return repository.Provider; }
+            get { return Repository.Provider; }
         }
 
         public void Dispose()
-        {
-            repository = null;
+        {         
             documentSession = null;
+        }
+
+        protected override IRavenQueryable<T> GetRavenQueryable()
+        {
+            return documentSession.Query<T>();
         }
     }
 }

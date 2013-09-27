@@ -8,9 +8,7 @@ namespace Roots.Persistence
 {
     public interface IAsyncRepository<T> : IQueryable<T>
     {
-        Task<T> GetByIdAsync(ValueType id);
-
-        Task<T> GetByIdAsync(string id);
+        Task<T> GetByIdAsync(object id);
 
         Task AddAsync(T item);
 

@@ -12,17 +12,22 @@ namespace Roots.Persistence.RavenDb
         private IAsyncDocumentSession documentSession;
         private IDocumentStore documentStore;
         private ICollection<IDisposable> trackedRepositories;
+        private IsolationLevel isolationLevel;
 
-        public RavenDbAsyncUnitOfWork(IDocumentStore documentStore)
+        public RavenDbAsyncUnitOfWork(IDocumentStore documentStore, IsolationLevel isolationLevel = IsolationLevel.None)
         {
             trackedRepositories = new List<IDisposable>();
+            this.isolationLevel = isolationLevel;
             this.documentStore = documentStore;
             this.documentSession = documentStore.OpenAsyncSession();
         }
 
         public IAsyncRepository<T> RepositoryOf<T>()
         {
-            var newRepository = new RavenDbAsyncRepository<T>(documentSession);
+            var newRepository = new RavenDbAsyncRepository<T>(
+                documentSession, 
+                documentStore.Conventions.GetIdentityProperty, 
+                isolationLevel);
             trackedRepositories.Add(newRepository);
             return newRepository;
         }
@@ -57,5 +62,7 @@ namespace Roots.Persistence.RavenDb
             }
             trackedRepositories.Clear();
         }
+
+        
     }
 }

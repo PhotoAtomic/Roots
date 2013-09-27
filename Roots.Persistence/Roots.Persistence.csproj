@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IsolationLevel.cs" />
     <Compile Include="QueryableAsyncExtensions.cs" />
     <Compile Include="IAsyncRepository.cs" />
     <Compile Include="IAsyncUnitOfWork.cs" />

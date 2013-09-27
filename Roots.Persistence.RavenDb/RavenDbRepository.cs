@@ -3,27 +3,29 @@ using Raven.Client.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Roots.Persistence.RavenDb
 {
-    class RavenDbRepository<T> : IRepository<T>, IDisposable
+    class RavenDbRepository<T> : RavenDbRespositoryBase<T>, IRepository<T>, IDisposable
     {
         private IDocumentSession documentSession;
-        private IRavenQueryable<T> repository;
-        public RavenDbRepository(IDocumentSession documentSession)
+        
+        public RavenDbRepository(IDocumentSession documentSession, Func<Type, PropertyInfo> getIdentityProperty, IsolationLevel isolationLevel = IsolationLevel.None)
+            : base(getIdentityProperty, isolationLevel)
         {
-            this.documentSession = documentSession;
-            this.repository = documentSession.Query<T>();
+            
+            this.documentSession = documentSession;            
         }
 
-        public T GetById(ValueType id)
+        public T GetById(object id)
         {
-            return documentSession.Load<T>(id);
-        }
-        public T GetById(string id)
-        {
-            return documentSession.Load<T>(id);
+            if (id == null) throw new ArgumentNullException("id");
+
+            return InvokeByTargetType(id,
+                x => documentSession.Load<T>(x),
+                x => documentSession.Load<T>(x));
         }
 
         public void Add(T item)
@@ -38,33 +40,37 @@ namespace Roots.Persistence.RavenDb
 
         public IEnumerator<T> GetEnumerator()
         {            
-            return repository.GetEnumerator();
+            return Repository.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return ((System.Collections.IEnumerable)repository).GetEnumerator();
+            return ((System.Collections.IEnumerable)Repository).GetEnumerator();
         }
 
         public Type ElementType
         {
-            get { return repository.ElementType; }
+            get { return Repository.ElementType; }
         }
 
         public System.Linq.Expressions.Expression Expression
         {
-            get { return repository.Expression; }
+            get { return Repository.Expression; }
         }
 
         public IQueryProvider Provider
         {
-            get { return repository.Provider; }
+            get { return Repository.Provider; }
         }
 
         public void Dispose()
-        {
-            repository = null;
+        {            
             documentSession = null;
+        }
+
+        protected override IRavenQueryable<T> GetRavenQueryable()
+        {
+            return documentSession.Query<T>();
         }
     }
 }
