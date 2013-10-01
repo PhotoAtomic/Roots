@@ -17,5 +17,10 @@ namespace Roots.Persistence.RavenDb
         {
             return Raven.Client.LinqExtensions.SingleOrDefaultAsync(source);            
         }
+
+        public Task<IList<TSource>> ToListAsync<TSource>(IQueryable<TSource> source)
+        {
+            return Raven.Client.LinqExtensions.ToListAsync<TSource>(source);
+        }
     }
 }

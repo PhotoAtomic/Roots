@@ -19,5 +19,11 @@ namespace Roots.Domain
         public string FirstName { get; set; }
 
         public ICollection<Login> Logins { get; set; }
+
+        public ICollection<Role> Roles { get; set; }
+
+        public ICollection<Claim> Claims { get; set; }
+
+        public string Secret { get; set; }
     }
 }

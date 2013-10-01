@@ -21,5 +21,11 @@ namespace Roots.Persistence.Test.Types
         }
 
         public static IQueryable CalledOn { get; set; }
+
+
+        public Task<IList<TSource>> ToListAsync<TSource>(IQueryable<TSource> source)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

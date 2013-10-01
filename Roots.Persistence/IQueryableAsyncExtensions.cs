@@ -8,6 +8,8 @@ namespace Roots.Persistence
 {
     public interface IQueryableAsyncExtensions
     {
-        Task<TSource> SingleOrDefaultAsync<TSource>(IQueryable<TSource> source);        
+        Task<TSource> SingleOrDefaultAsync<TSource>(IQueryable<TSource> source);
+
+        Task<IList<TSource>> ToListAsync<TSource>(IQueryable<TSource> source);
     }
 }

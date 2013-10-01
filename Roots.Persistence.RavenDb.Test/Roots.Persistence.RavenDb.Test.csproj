@@ -79,7 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Roots.Persistence.RavenDb.Attributes\Roots.Persistence.RavenDb.Attributes.csproj">
-      <Project>{c1992d84-cc9d-4602-bc3d-ce01bcc4ec7a}</Project>
+      <Project>{84fbd092-2103-47a7-b37f-9b505cab1e73}</Project>
       <Name>Roots.Persistence.RavenDb.Attributes</Name>
     </ProjectReference>
     <ProjectReference Include="..\Roots.Persistence.RavenDb.Helper.Test\Roots.Persistence.RavenDb.Helper.Test.csproj">

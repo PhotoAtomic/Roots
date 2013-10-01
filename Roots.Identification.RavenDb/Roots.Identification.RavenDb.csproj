@@ -50,10 +50,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Roots.Domain\Roots.Domain.csproj">
-      <Project>{81b3c262-1cc7-4a7c-92d8-0db123851118}</Project>
-      <Name>Roots.Domain</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Roots.Persistence\Roots.Persistence.csproj">
       <Project>{7a3c939b-c748-48ec-ba1f-30c338aa44eb}</Project>
       <Name>Roots.Persistence</Name>

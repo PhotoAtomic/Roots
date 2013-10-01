@@ -19,6 +19,18 @@ namespace Roots.Identification
             this.factory = factory;
             this.uow = factory.CreateAsyncNew();
             Users = new UserStore(uow);
+            Logins = new UserLoginStore(uow);
+            Roles = new RoleStore(uow);
+            Secrets = new UserSecretStore(uow);
+            Tokens = new TokenStore(uow);
+            UserClaims = new UserClaimStore(uow);
+        }
+
+
+        public IUserStore Users
+        {
+            get;
+            private set;
         }
 
         public IUserLoginStore Logins
@@ -28,6 +40,30 @@ namespace Roots.Identification
         }
 
         public IRoleStore Roles
+        {
+            get;
+            private set;
+        }
+
+        public IUserSecretStore Secrets
+        {
+            get;
+            private set;
+        }
+
+        public ITokenStore Tokens
+        {
+            get;
+            private set;
+        }
+
+        public IUserClaimStore UserClaims
+        {
+            get;
+            private set;
+        }
+
+        public IUserManagementStore UserManagement
         {
             get { throw new NotImplementedException(); }
         }
@@ -45,31 +81,8 @@ namespace Roots.Identification
             }
         }
 
-        public IUserSecretStore Secrets
-        {
-            get { throw new NotImplementedException(); }
-        }
+       
 
-        public ITokenStore Tokens
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public IUserClaimStore UserClaims
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public IUserManagementStore UserManagement
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public IUserStore Users
-        {
-            get;
-            private set;
-        }
 
         public void Dispose()
         {

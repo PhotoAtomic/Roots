@@ -79,10 +79,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Roots.Persistence.RavenDb.Attributes\Roots.Persistence.RavenDb.Attributes.csproj">
-      <Project>{c1992d84-cc9d-4602-bc3d-ce01bcc4ec7a}</Project>
-      <Name>Roots.Persistence.RavenDb.Attributes</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Roots.Persistence.RavenDb\Roots.Persistence.RavenDb.csproj">
       <Project>{ecbc99f2-e163-4ba1-8d3d-ecdbf1fe21e4}</Project>
       <Name>Roots.Persistence.RavenDb</Name>

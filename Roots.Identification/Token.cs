@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Roots.Identification
 {
-    public class User : Roots.Domain.User, IUser
+    public class Token : Domain.SecurityToken, IToken
     {
-        string IUser.Id
+        string IToken.Id
         {
             get
             {
@@ -21,18 +21,16 @@ namespace Roots.Identification
             }
         }
 
-
-        string IUser.UserName
+        DateTime IToken.ValidUntilUtc
         {
-            get
+            get 
             {
-                return UserName;
+                return base.UtcExpireDate;
             }
             set
             {
-                UserName = value;
+                base.UtcExpireDate = value;
             }
         }
-        
     }
 }
