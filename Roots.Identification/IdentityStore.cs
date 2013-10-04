@@ -17,13 +17,14 @@ namespace Roots.Identification
         public IdentityStore(IUnitOfWorkFactory factory)
         {
             this.factory = factory;
-            this.uow = factory.CreateAsyncNew();
+            this.uow = factory.CreateAsyncNew(IsolationLevel.ReadItsOwnWrite);
             Users = new UserStore(uow);
             Logins = new UserLoginStore(uow);
             Roles = new RoleStore(uow);
             Secrets = new UserSecretStore(uow);
             Tokens = new TokenStore(uow);
             UserClaims = new UserClaimStore(uow);
+            UserManagement = new UserManagementStore(uow);
         }
 
 
@@ -65,7 +66,8 @@ namespace Roots.Identification
 
         public IUserManagementStore UserManagement
         {
-            get { throw new NotImplementedException(); }
+            get;
+            private set;
         }
 
         public async Task<IdentityResult> SaveChangesAsync(System.Threading.CancellationToken cancellationToken)

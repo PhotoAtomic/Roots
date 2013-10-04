@@ -11,10 +11,13 @@ namespace Roots.Identification
 {
     public class UserSecretStore : IUserSecretStore
     {
-        private Persistence.IAsyncUnitOfWork uow;
 
-        public UserSecretStore(Persistence.IAsyncUnitOfWork uow)
-        {            
+        private IAsyncUnitOfWork uow;
+
+
+        public UserSecretStore(IAsyncUnitOfWork uow)
+        {
+            // TODO: Complete member initialization
             this.uow = uow;
         }
 
@@ -38,7 +41,7 @@ namespace Roots.Identification
             }
             catch (Exception ex)
             {
-                return IdentityResult.Failed(ex.Message);
+                return IdentityResult.Failed("CreateAsync user secret store");
             }
         }
 
@@ -60,11 +63,12 @@ namespace Roots.Identification
 
                 user.Secret = null;
 
+
                 return IdentityResult.Succeeded();
             }
             catch (Exception ex)
             {
-                return IdentityResult.Failed(ex.Message);
+                return IdentityResult.Failed("DeleteAsync user secret store");
             }
 
         }
@@ -73,15 +77,17 @@ namespace Roots.Identification
         {
             try
             {
-                var user = await
-                        uow.RepositoryOf<User>()
-                        .Where(x => x.UserName == userName)
-                        .SingleOrDefaultAsync();
+            
+                    var user = await
+                            uow.RepositoryOf<User>()
+                            .Where(x => x.UserName == userName)
+                            .SingleOrDefaultAsync();
 
-                if (user == null) return null;
+                    if (user == null) return null;
 
 
-                return new UserSecret() { UserName = userName, Secret = user.Secret };
+                    return new UserSecret() { UserName = userName, Secret = user.Secret };
+            
             }
             catch
             {
@@ -93,33 +99,36 @@ namespace Roots.Identification
         {
             try
             {
-                var user = await
-                        uow.RepositoryOf<User>()
-                        .Where(x => x.UserName == userName)
-                        .SingleOrDefaultAsync();
+                
+                    var user = await
+                            uow.RepositoryOf<User>()
+                            .Where(x => x.UserName == userName)
+                            .SingleOrDefaultAsync();
 
-                if (user == null) return null;
+                    if (user == null) return null;
 
-                user.Secret = newSecret;
-                return IdentityResult.Succeeded();
+                    user.Secret = newSecret;
+
+                    return IdentityResult.Succeeded();
+                
             }
             catch (Exception ex)
             {
-                return IdentityResult.Failed(ex.Message);
+                return IdentityResult.Failed("UpdateAsync user secret store");
             }
         }
 
         public async Task<bool> ValidateAsync(string userName, string loginSecret, CancellationToken cancellationToken)
         {
             
-            var user = await
-                    uow.RepositoryOf<User>()
-                    .Where(x => x.UserName == userName)
-                    .SingleOrDefaultAsync();
+                var user = await
+                        uow.RepositoryOf<User>()
+                        .Where(x => x.UserName == userName)
+                        .SingleOrDefaultAsync();
 
-            if (user == null || user.Secret == null) return false;
+                if (user == null || user.Secret == null) return false;
 
-            return user.Secret == loginSecret;
+                return user.Secret == loginSecret;
             
         }
     }

@@ -9,6 +9,17 @@ namespace Roots.Identification
 {
     public class User : Roots.Domain.User, IUser
     {
+
+        public User()
+        {
+
+        }
+
+        public User(string userName)
+        {
+            // TODO: Complete member initialization
+            UserName = userName;
+        }
         string IUser.Id
         {
             get

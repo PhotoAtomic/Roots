@@ -18,6 +18,8 @@ namespace Roots.Domain
 
         public string FirstName { get; set; }
 
+        public DateTime LastLogInTimeUtc { get; set; }
+
         public ICollection<Login> Logins { get; set; }
 
         public ICollection<Role> Roles { get; set; }
@@ -25,5 +27,8 @@ namespace Roots.Domain
         public ICollection<Claim> Claims { get; set; }
 
         public string Secret { get; set; }
+
+        public bool Enabled { get; set; }
+
     }
 }

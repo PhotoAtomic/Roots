@@ -6,19 +6,24 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+//using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Roots.Web.Models;
+using Roots.Identification;
+using Roots.Persistence;
+using System.ComponentModel.Composition;
 
 namespace Roots.Web.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
-        public AccountController() 
+        [ImportingConstructor]
+        public AccountController(IUnitOfWorkFactory factory) 
         {
-            IdentityManager = new AuthenticationIdentityManager(new IdentityStore());
+            //IdentityManager = new AuthenticationIdentityManager(new IdentityStore());
+            IdentityManager = new AuthenticationIdentityManager(new Roots.Identification.IdentityStore(factory));
         }
 
         public AccountController(AuthenticationIdentityManager manager)
@@ -87,10 +92,13 @@ namespace Roots.Web.Controllers
             {
                 // Create a local login before signing in the user
                 var user = new User(model.UserName);
-                var result = await IdentityManager.Users.CreateLocalUserAsync(user, model.Password);
+                var result =  await IdentityManager.Users.CreateLocalUserAsync(user, model.Password);
+                var a = 1;
+                a++;
+                //var result = resultTask.Result;
                 if (result.Success)
                 {
-                    await IdentityManager.Authentication.SignInAsync(AuthenticationManager, user.Id, isPersistent: false);
+                    await IdentityManager.Authentication.SignInAsync(AuthenticationManager, ((IUser)user).Id, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }
                 else

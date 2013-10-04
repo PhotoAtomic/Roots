@@ -44,7 +44,6 @@
     <Compile Include="IAsyncRepository.cs" />
     <Compile Include="IAsyncUnitOfWork.cs" />
     <Compile Include="IQueryableAsyncExtensions.cs" />
-    <Compile Include="UnitOfWorkFactory.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="IUnitOfWorkFactory.cs" />
