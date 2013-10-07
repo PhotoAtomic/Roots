@@ -10,36 +10,35 @@ using Roots.Persistence;
 
 namespace Roots.Identification
 {
-    public class UserClaimStore : IUserClaimStore
+    public class UserClaimStore : Store, IUserClaimStore
     {       
     
-        private IAsyncUnitOfWork uow;
 
-       
 
         public UserClaimStore(IAsyncUnitOfWork uow)
+            : base(uow)
         {
-            // TODO: Complete member initialization
-            this.uow = uow;
         }
 
         public async Task<IdentityResult> AddAsync(IUserClaim userClaim, CancellationToken cancellationToken)
         {
-            
+            return await Commit(async uow =>
+            {
                 var user = await uow.RepositoryOf<User>().GetByIdAsync(userClaim.UserId);
                 if (user == null) return IdentityResult.Failed("User not found");
                 if (user.Claims == null) user.Claims = new List<Domain.Claim>();
                 if (user.Claims.Any(x => x.Type == userClaim.ClaimType && x.Value == userClaim.ClaimValue)) return IdentityResult.Succeeded();
                 user.Claims.Add(new Domain.Claim { Type = userClaim.ClaimType, Value = userClaim.ClaimValue });
 
-             
+
                 return IdentityResult.Succeeded();
-            
+            });
         }
 
         public async Task<IEnumerable<IUserClaim>> GetUserClaimsAsync(string userId, CancellationToken cancellationToken)
         {
-            
+            return await Commit(async uow =>
+            {
                 var user = await uow.RepositoryOf<User>().GetByIdAsync(userId);
 
                 if (user == null) return null;
@@ -52,12 +51,13 @@ namespace Roots.Identification
                         ClaimType = x.Type,
                         ClaimValue = x.Value
                     });
-            
+            });
         }
 
         public async Task<IdentityResult> RemoveAsync(string userId, string claimType, string claimValue, CancellationToken cancellationToken)
         {
-            
+            return await Commit(async uow =>
+            {
                 var user = await uow.RepositoryOf<User>().GetByIdAsync(userId);
 
                 if (user == null) return IdentityResult.Failed("User not found");
@@ -71,9 +71,9 @@ namespace Roots.Identification
                     user.Claims.Remove(claim);
                 }
 
-            
+
                 return IdentityResult.Succeeded();
-            
+            });
         }
     }
 }

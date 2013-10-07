@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Roots.Identification
 {
@@ -12,12 +13,14 @@ namespace Roots.Identification
     {
         private readonly IUnitOfWorkFactory factory;
         private IAsyncUnitOfWork uow;
+        private TransactionScope transaction;
                 
 
         public IdentityStore(IUnitOfWorkFactory factory)
         {
             this.factory = factory;
-            this.uow = factory.CreateAsyncNew(IsolationLevel.ReadItsOwnWrite);
+            transaction = new TransactionScope();
+            this.uow = factory.CreateAsyncNew(Roots.Persistence.IsolationLevel.ReadItsOwnWrite);
             Users = new UserStore(uow);
             Logins = new UserLoginStore(uow);
             Roles = new RoleStore(uow);
@@ -75,6 +78,9 @@ namespace Roots.Identification
             try
             {
                 await uow.CommitAsync();
+                transaction.Complete();
+                //transaction.Dispose();
+                transaction = new TransactionScope();
                 return IdentityResult.Succeeded();
             }
             catch (Exception ex)
@@ -89,6 +95,7 @@ namespace Roots.Identification
         public void Dispose()
         {
             uow.Dispose();
+            //transaction.Dispose();
         }
     }
 }

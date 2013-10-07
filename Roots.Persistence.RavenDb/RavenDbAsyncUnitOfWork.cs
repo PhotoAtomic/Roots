@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Roots.Persistence.RavenDb
 {
@@ -20,6 +21,10 @@ namespace Roots.Persistence.RavenDb
             this.isolationLevel = isolationLevel;
             this.documentStore = documentStore;
             this.documentSession = documentStore.OpenAsyncSession();
+            if (Transaction.Current != null)
+            {
+                this.documentSession.Advanced.AllowNonAuthoritativeInformation = false;
+            }
         }
 
         public IAsyncRepository<T> RepositoryOf<T>()

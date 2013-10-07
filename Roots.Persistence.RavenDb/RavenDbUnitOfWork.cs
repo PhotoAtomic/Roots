@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Transactions;
 
 namespace Roots.Persistence.RavenDb
 {
@@ -18,6 +19,10 @@ namespace Roots.Persistence.RavenDb
             this.documentStore = documentStore;
             this.isolationLevel = isolationLevel;
             this.documentSession = documentStore.OpenSession();
+            if (Transaction.Current != null)
+            {
+                this.documentSession.Advanced.AllowNonAuthoritativeInformation = false;
+            }
         }
 
         public IRepository<T> RepositoryOf<T>()
