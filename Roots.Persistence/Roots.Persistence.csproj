@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -39,7 +40,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\ConstFinder.cs" />
+    <Compile Include="Cache\ICachedRepository.cs" />
+    <Compile Include="Cache\MakeLambdaOnParameter.cs" />
+    <Compile Include="Cache\MemoryCacheEnumerator.cs" />
+    <Compile Include="Cache\MemoryCacheQueryProvider.cs" />
+    <Compile Include="Cache\MemoryQueryable.cs" />
+    <Compile Include="Cache\MemoryRepository.cs" />
+    <Compile Include="Cache\TypeDisassembler.cs" />
     <Compile Include="IsolationLevel.cs" />
+    <Compile Include="Cache\MemoryCache.cs" />
     <Compile Include="QueryableAsyncExtensions.cs" />
     <Compile Include="IAsyncRepository.cs" />
     <Compile Include="IAsyncUnitOfWork.cs" />
@@ -48,11 +58,20 @@
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="IUnitOfWorkFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryableAsyncForEnumerableExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PhotoAtomic.ComposableExtensions\PhotoAtomic.ComposableExtensions.csproj">
       <Project>{f528a192-3dad-419d-9e39-cc88a7870006}</Project>
       <Name>PhotoAtomic.ComposableExtensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PhotoAtomic.Extensions\PhotoAtomic.Extensions.csproj">
+      <Project>{e23ec3e6-c17a-4384-bd2c-867976b73564}</Project>
+      <Name>PhotoAtomic.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PhotoAtomic.Reflection\PhotoAtomic.Reflection.csproj">
+      <Project>{50c68791-06c1-4d21-8b33-800cec9b9351}</Project>
+      <Name>PhotoAtomic.Reflection</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

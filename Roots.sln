@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonServiceLocator.MefAda
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonServiceLocator.MefAdapter.Tests", "CommonServiceLocator.MefAdapter.Tests\CommonServiceLocator.MefAdapter.Tests.csproj", "{29B5EAB2-A4F1-4AA7-B24A-8207B426EC3E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoAtomic.Reflection.Test", "PhotoAtomic.Reflection.Test\PhotoAtomic.Reflection.Test.csproj", "{B0A432A6-C097-4A4F-B491-AF313A913AFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,10 @@ Global
 		{29B5EAB2-A4F1-4AA7-B24A-8207B426EC3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29B5EAB2-A4F1-4AA7-B24A-8207B426EC3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29B5EAB2-A4F1-4AA7-B24A-8207B426EC3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0A432A6-C097-4A4F-B491-AF313A913AFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0A432A6-C097-4A4F-B491-AF313A913AFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0A432A6-C097-4A4F-B491-AF313A913AFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0A432A6-C097-4A4F-B491-AF313A913AFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -144,5 +150,6 @@ Global
 		{FFEC12F4-1C83-4443-9D27-456A1750D73F} = {812145E3-F988-4BEB-B864-A4C83EA8ACAA}
 		{A254DF09-4AE2-44DC-82A1-221FA90FC335} = {812145E3-F988-4BEB-B864-A4C83EA8ACAA}
 		{29B5EAB2-A4F1-4AA7-B24A-8207B426EC3E} = {812145E3-F988-4BEB-B864-A4C83EA8ACAA}
+		{B0A432A6-C097-4A4F-B491-AF313A913AFE} = {812145E3-F988-4BEB-B864-A4C83EA8ACAA}
 	EndGlobalSection
 EndGlobal

@@ -12,13 +12,14 @@ namespace Roots.Persistence.RavenDb
         private IDocumentSession documentSession;
         private IDocumentStore documentStore;
         private ICollection<IDisposable> trackedRepositories;
+        private IsolationLevel isolationLevel;
 
         public RavenDbUnitOfWork(IDocumentStore documentStore, IsolationLevel isolationLevel = IsolationLevel.None)
         {
             trackedRepositories = new List<IDisposable>();
             this.documentStore = documentStore;
             this.isolationLevel = isolationLevel;
-            this.documentSession = documentStore.OpenSession();
+            this.documentSession = documentStore.OpenSession(); //HINT: make Lazy (also on the async version)
             if (Transaction.Current != null)
             {
                 this.documentSession.Advanced.AllowNonAuthoritativeInformation = false;
@@ -65,6 +66,6 @@ namespace Roots.Persistence.RavenDb
             trackedRepositories.Clear();
         }
 
-        public IsolationLevel isolationLevel { get; set; }
+        
     }
 }

@@ -1,4 +1,5 @@
-﻿using Raven.Client;
+﻿using Raven.Abstractions.Commands;
+using Raven.Client;
 using Raven.Client.Linq;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace Roots.Persistence.RavenDb
         }
 
         public void Remove(T item)
-        {
+        {                        
             documentSession.Delete<T>(item);
         }
 
@@ -71,6 +72,13 @@ namespace Roots.Persistence.RavenDb
         protected override IRavenQueryable<T> GetRavenQueryable()
         {
             return documentSession.Query<T>();
+        }
+
+
+        public void RemoveById(object id)
+        {
+            var key = KeyForId(documentSession.Advanced.DocumentStore, id);
+            documentSession.Advanced.Defer(new DeleteCommandData { Key = key });
         }
     }
 }

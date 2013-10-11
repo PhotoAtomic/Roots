@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Roots.Identification
 {
-    public class User : Roots.Domain.User, IUser
+    public class User : IUser
     {
 
         public User()
@@ -20,29 +20,29 @@ namespace Roots.Identification
             // TODO: Complete member initialization
             UserName = userName;
         }
-        string IUser.Id
+        public string Id
         {
             get
             {
-                return base.Id.ToString();
+                return Guid.ToString();
             }
             set
             {
-                base.Id = Guid.Parse(value);
+                Guid = Guid.Parse(value);
             }
         }
 
 
-        string IUser.UserName
+        public Guid Guid
         {
-            get
-            {
-                return UserName;
-            }
-            set
-            {
-                UserName = value;
-            }
+            get;
+            set;
+        }
+
+        public string UserName
+        {
+            get;
+            set;
         }
         
     }

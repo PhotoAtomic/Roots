@@ -8,7 +8,18 @@ using System.Threading.Tasks;
 namespace Roots.Identification
 {
     public class UserClaim: IUserClaim
-    {
+    {        
+
+        public UserClaim()
+        {
+        }
+
+        public UserClaim(string userId, Domain.Claim x)
+        {
+            UserId = userId;
+            ClaimType = x.Type;
+            ClaimValue = x.Value;         
+        }
         public string ClaimType
         {
             get;

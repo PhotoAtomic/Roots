@@ -3,12 +3,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FFEC12F4-1C83-4443-9D27-456A1750D73F}</ProjectGuid>
+    <ProjectGuid>{B0A432A6-C097-4A4F-B491-AF313A913AFE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Roots.Persistence.RavenDb.Test</RootNamespace>
-    <AssemblyName>Roots.Persistence.RavenDb.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>PhotoAtomic.Reflection.Test</RootNamespace>
+    <AssemblyName>PhotoAtomic.Reflection.Test</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -35,15 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Moq">
-      <HintPath>..\packages\Moq.4.1.1309.1617\lib\net40\Moq.dll</HintPath>
-    </Reference>
-    <Reference Include="Raven.Abstractions">
-      <HintPath>..\packages\RavenDB.Client.2.5.2700\lib\net45\Raven.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Raven.Client.Lightweight">
-      <HintPath>..\packages\RavenDB.Client.2.5.2700\lib\net45\Raven.Client.Lightweight.dll</HintPath>
-    </Reference>
     <Reference Include="SharpTestsEx">
       <HintPath>..\packages\SharpTestsEx.1.1.1\lib\SharpTestsEx.dll</HintPath>
     </Reference>
@@ -51,7 +42,6 @@
       <HintPath>..\packages\SharpTestsEx.1.1.1\lib\SharpTestsEx.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -66,36 +56,17 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="MemoryCacheTest.cs" />
+    <Compile Include="ReflectionOnEnumerable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RepositoryBaseTest.cs" />
-    <Compile Include="Types\EntityWithGuidId.cs" />
-    <Compile Include="Types\EntityWithStringId.cs" />
-    <Compile Include="Types\TestClassBase.cs" />
-    <Compile Include="Types\TestClassDerived.cs" />
-    <Compile Include="Types\TestEntity.cs" />
-    <Compile Include="UnitOfWorkFactoryTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PhotoAtomic.Reflection\PhotoAtomic.Reflection.csproj">
+      <Project>{50c68791-06c1-4d21-8b33-800cec9b9351}</Project>
+      <Name>PhotoAtomic.Reflection</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Roots.Persistence.RavenDb.Attributes\Roots.Persistence.RavenDb.Attributes.csproj">
-      <Project>{84fbd092-2103-47a7-b37f-9b505cab1e73}</Project>
-      <Name>Roots.Persistence.RavenDb.Attributes</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Roots.Persistence.RavenDb.Helper.Test\Roots.Persistence.RavenDb.Helper.Test.csproj">
-      <Project>{dbec0455-ca75-40fa-af2c-88d3a917c030}</Project>
-      <Name>Roots.Persistence.RavenDb.Helper.Test</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Roots.Persistence.RavenDb\Roots.Persistence.RavenDb.csproj">
-      <Project>{ecbc99f2-e163-4ba1-8d3d-ecdbf1fe21e4}</Project>
-      <Name>Roots.Persistence.RavenDb</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Roots.Persistence\Roots.Persistence.csproj">
-      <Project>{7a3c939b-c748-48ec-ba1f-30c338aa44eb}</Project>
-      <Name>Roots.Persistence</Name>
-    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

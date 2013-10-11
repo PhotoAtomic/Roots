@@ -9,6 +9,16 @@ namespace Roots.Identification
 {
     public class UserLogin : IUserLogin
     {
+        public UserLogin()
+        {
+        }
+
+        public UserLogin(string userId, Domain.Login login)
+        {
+            UserId = userId;
+            LoginProvider = login.Provider;
+            ProviderKey = login.ProviderKey;
+        }
         public string LoginProvider
         {
             get;

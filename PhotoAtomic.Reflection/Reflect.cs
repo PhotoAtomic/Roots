@@ -3,10 +3,11 @@
 
 
         using System;
+        using System.Collections.Generic;
         using System.Diagnostics;
         using System.Linq.Expressions;
         using System.Reflection;
-
+        using System.Linq;
         public static class Reflect
         {
             public static string NameOf<T>(Expression<Action<T>> action)
@@ -39,6 +40,47 @@
             {
                 return default(T);
             }
+
+
+            public static Type GetSequenceType<T>(IEnumerable<T> sequence)
+            {
+                return typeof(T);
+            }
+
+            public static Type GetSequenceType(Type seqType)
+            {
+                if (seqType == null || seqType == typeof(string))
+                return null;
+
+                if (seqType.IsArray)
+                    return seqType.GetElementType();
+
+                if (seqType.IsGenericType)
+                {
+                    var definition = seqType.GetGenericTypeDefinition();
+                    if (definition == typeof(IEnumerable<>))
+                    {
+                        return seqType.GetGenericArguments().First();
+                    }
+                }
+
+                var type = seqType.GetInterfaces()
+                    .Select(x => GetSequenceType(x))
+                    .Where(x => x != null)
+                    .FirstOrDefault();
+                if (type != null) return type;
+
+               
+                if (seqType.BaseType != null && seqType.BaseType != typeof(object))
+                {
+                    return GetSequenceType(seqType.BaseType);
+                }
+
+                return null;
+            }
+
+            
+
         }
     }
 

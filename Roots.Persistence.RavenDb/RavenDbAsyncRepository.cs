@@ -1,4 +1,5 @@
-﻿using Raven.Client;
+﻿using Raven.Abstractions.Commands;
+using Raven.Client;
 using Raven.Client.Linq;
 using System;
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ namespace Roots.Persistence.RavenDb
         }
 
         public Task RemoveAsync(T item)
-        {
+        {            
             documentSession.Delete<T>(item);
             return Task.FromResult<object>(null);
         }
@@ -76,5 +77,20 @@ namespace Roots.Persistence.RavenDb
         {
             return documentSession.Query<T>();
         }
+        
+
+
+        public Task RemoveByIdAsync(object id)
+        {
+            //HINT: shitty raven, i have to instanciate a type and fill t's id property to obrain its string id
+            return Task.Run(() =>
+            {
+                var key = KeyForId(documentSession.Advanced.DocumentStore, id);
+                documentSession.Advanced.Defer(new DeleteCommandData { Key = key });
+            });
+            
+        }
+
+        
     }
 }

@@ -77,6 +77,6 @@ namespace Roots.Persistence.RavenDb
         public Roots.Persistence.IAsyncUnitOfWork CreateAsyncNew(IsolationLevel isolationLevel = IsolationLevel.None)
         {
             return new RavenDbAsyncUnitOfWork(documentStore, isolationLevel);
-        }
+        }   
     }
 }

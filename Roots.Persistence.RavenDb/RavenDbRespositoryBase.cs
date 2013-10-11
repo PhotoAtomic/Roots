@@ -1,4 +1,5 @@
-﻿using Raven.Client.Linq;
+﻿using Raven.Client;
+using Raven.Client.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -104,6 +105,20 @@ namespace Roots.Persistence.RavenDb
             }
 
             return false;
+        }
+
+        public PropertyInfo GetIdProperty()
+        {
+            return getIdentityProperty(typeof(T));
+        }
+
+        protected string KeyForId(IDocumentStore store, object id)
+        {
+            object instance = default(T);
+            GetIdProperty().SetValue(instance, id);
+
+            var key = store.Conventions.GenerateDocumentKey(string.Empty, null, instance);
+            return key;
         }
     }
 }

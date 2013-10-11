@@ -9,25 +9,24 @@ using System.Transactions;
 
 namespace Roots.Identification
 {
-    public class IdentityStore : IIdentityStore
+    public partial class IdentityStore : 
+        IIdentityStore, IUserStore, IUserLoginStore, IRoleStore, 
+        IUserSecretStore, ITokenStore, IUserClaimStore, IUserManagementStore
     {
-        private readonly IUnitOfWorkFactory factory;
-        private IAsyncUnitOfWork uow;
-        private TransactionScope transaction;
+        private readonly IUnitOfWorkFactory factory;        
+        
                 
-
         public IdentityStore(IUnitOfWorkFactory factory)
         {
             this.factory = factory;
-            transaction = new TransactionScope();
-            this.uow = factory.CreateAsyncNew(Roots.Persistence.IsolationLevel.ReadItsOwnWrite);
-            Users = new UserStore(uow);
-            Logins = new UserLoginStore(uow);
-            Roles = new RoleStore(uow);
-            Secrets = new UserSecretStore(uow);
-            Tokens = new TokenStore(uow);
-            UserClaims = new UserClaimStore(uow);
-            UserManagement = new UserManagementStore(uow);
+
+            Users = (IUserStore)this;
+            Logins = (IUserLoginStore)this;
+            Roles = (IRoleStore)this;
+            Secrets = (IUserSecretStore)this;
+            Tokens = (ITokenStore)this;
+            UserClaims = (IUserClaimStore)this;
+            UserManagement = (IUserManagementStore)this;
         }
 
 
@@ -73,20 +72,9 @@ namespace Roots.Identification
             private set;
         }
 
-        public async Task<IdentityResult> SaveChangesAsync(System.Threading.CancellationToken cancellationToken)
+        public Task<IdentityResult> SaveChangesAsync(System.Threading.CancellationToken cancellationToken)
         {
-            try
-            {
-                await uow.CommitAsync();
-                transaction.Complete();
-                //transaction.Dispose();
-                transaction = new TransactionScope();
-                return IdentityResult.Succeeded();
-            }
-            catch (Exception ex)
-            {
-                return IdentityResult.Failed(ex.Message);
-            }
+            throw new NotImplementedException();
         }
 
        
@@ -94,8 +82,7 @@ namespace Roots.Identification
 
         public void Dispose()
         {
-            uow.Dispose();
-            //transaction.Dispose();
+
         }
     }
 }

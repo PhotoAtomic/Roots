@@ -20,6 +20,7 @@ namespace Roots.Persistence.RavenDb
             trackedRepositories = new List<IDisposable>();
             this.isolationLevel = isolationLevel;
             this.documentStore = documentStore;
+            if (Transaction.Current != null) throw new Exception("RavenDb doesn't support Async in DTC transactions, thanks ayende.");
             this.documentSession = documentStore.OpenAsyncSession();
             if (Transaction.Current != null)
             {
