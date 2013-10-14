@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnumerableExtensions.cs" />
+    <Compile Include="EnumeratorExtensions.cs" />
     <Compile Include="IEquatable.cs" />
     <Compile Include="ItemEqualityComparer.cs" />
     <Compile Include="ObjectExtensions.cs" />

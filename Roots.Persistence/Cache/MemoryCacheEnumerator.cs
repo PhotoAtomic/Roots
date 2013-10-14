@@ -3,30 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PhotoAtomic.Extensions;
+using System.Reflection;
 
 
 namespace Roots.Persistence.Cache
 {
     class MemoryCacheEnumerator<T> : IEnumerator<T>
     {
-        private MemoryRepository<T> memoryRepository;
-        private IUnitOfWorkFactory factory;
-        private IUnitOfWork uow;
         public IEnumerator<T> internalEnumerator;
+        private IDisposable[] disposables;
+        private Action<T> track;
 
-        public MemoryCacheEnumerator(MemoryRepository<T> memoryRepository, IUnitOfWorkFactory factory)
-        {   
-            this.memoryRepository = memoryRepository;
-            this.factory = factory;
+        public MemoryCacheEnumerator(IEnumerable<T> localEnum, IEnumerable<T> remoteEnum, Action<T> track, PropertyInfo idProperty, params IDisposable[] disposables)
+        {
+            this.disposables = disposables;
+            this.track = track;
 
-            var idProperty = memoryRepository.GetIdProperty();
-
-            uow = factory.CreateNew();
-            internalEnumerator =
-                memoryRepository.cache.Values
-                .Union(
-                    uow.RepositoryOf<T>(),
-                    new ItemEqualityComparer<T>(
+            internalEnumerator= 
+                localEnum.Union(remoteEnum,
+                 new ItemEqualityComparer<T>(
                         (x, y) => idProperty.GetValue(x) == idProperty.GetValue(y),
                         x =>
                         {
@@ -34,8 +29,7 @@ namespace Roots.Persistence.Cache
                             if (value == null) return 0;
                             return value.GetHashCode();
                         }))
-                .GetEnumerator();
-
+                        .GetEnumerator();
         }
 
         public T Current
@@ -49,7 +43,11 @@ namespace Roots.Persistence.Cache
 
         public void Dispose()
         {
-            uow.Dispose();
+            if (disposables == null) return;
+            foreach (var disposable in disposables)
+            {
+                disposable.Dispose();
+            }
         }
 
         object System.Collections.IEnumerator.Current
@@ -64,7 +62,7 @@ namespace Roots.Persistence.Cache
             {             
                 return false;
             }
-            memoryRepository.Track(internalEnumerator.Current);
+            track(internalEnumerator.Current);
             return hasNext;
         }
 

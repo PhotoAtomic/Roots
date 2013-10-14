@@ -42,11 +42,13 @@
   <ItemGroup>
     <Compile Include="Cache\ConstFinder.cs" />
     <Compile Include="Cache\ICachedRepository.cs" />
+    <Compile Include="Cache\ChangeConstant.cs" />
     <Compile Include="Cache\MakeLambdaOnParameter.cs" />
     <Compile Include="Cache\MemoryCacheEnumerator.cs" />
     <Compile Include="Cache\MemoryCacheQueryProvider.cs" />
     <Compile Include="Cache\MemoryQueryable.cs" />
     <Compile Include="Cache\MemoryRepository.cs" />
+    <Compile Include="Cache\SubexpressionChanger.cs" />
     <Compile Include="Cache\TypeDisassembler.cs" />
     <Compile Include="IsolationLevel.cs" />
     <Compile Include="Cache\MemoryCache.cs" />

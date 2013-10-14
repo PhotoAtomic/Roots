@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Linq;
 using Roots.Persistence.Cache;
 using SharpTestsEx;
+using System.Collections.Generic;
 
 namespace Roots.Persistence.Test
 {
@@ -75,6 +76,33 @@ namespace Roots.Persistence.Test
 
             var replacer = new MakeLambdaOnParameter<IQueryable<TestClass>>();
             var replaced = replacer.Replace(exp);
+
+            replaced.NodeType.Should().Be(ExpressionType.Lambda);
+            replaced.Parameters.Should().Have.Count.EqualTo(1);
+
+            ((MethodCallExpression)((LambdaExpression)replaced.Body).Body).NodeType.Should().Be.EqualTo(ExpressionType.Call);
+            ((MethodCallExpression)((LambdaExpression)replaced.Body).Body).Method.Name.Should().Be.EqualTo("Select");
+            ((MethodCallExpression)((LambdaExpression)replaced.Body).Body).Arguments.Should().Have.Count.EqualTo(2);
+            ((MethodCallExpression)((MethodCallExpression)((LambdaExpression)replaced.Body).Body).Arguments[0]).Method.Name.Should().Be.EqualTo("Where");
+            ((MethodCallExpression)((MethodCallExpression)((LambdaExpression)replaced.Body).Body).Arguments[0]).Arguments.Should().Have.Count.EqualTo(2);
+            ((MethodCallExpression)((MethodCallExpression)((LambdaExpression)replaced.Body).Body).Arguments[0]).Arguments[0].Should().Be.EqualTo(replaced.Parameters[0]);
+
+        }
+
+        [TestMethod]
+        public void ReplaceConstantWithNewConstant()
+        {
+
+            Expression<Func<IQueryable>> exp = () => repo.Where(x => x.Value == 1).Select(x => x);
+
+            var replacer = new ChangeConstant<IQueryable<TestClass>>();
+
+            var newConstant =  new List<TestClass>().AsQueryable();
+
+            var replaced = (Expression<Func<IQueryable>>)replacer.Replace(exp,newConstant);
+
+            ((ConstantExpression)((MethodCallExpression)((MethodCallExpression)((LambdaExpression)replaced).Body).Arguments[0]).Arguments[0]).Value.Should().Be.EqualTo(newConstant);
+
         }
 
     }

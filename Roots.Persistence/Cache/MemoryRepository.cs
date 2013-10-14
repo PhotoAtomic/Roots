@@ -15,6 +15,7 @@ namespace Roots.Persistence.Cache
         private IUnitOfWorkFactory factory;
         private PropertyInfo idProperty;
         
+        
 
         public MemoryRepository(IUnitOfWorkFactory factory)
         {
@@ -144,6 +145,18 @@ namespace Roots.Persistence.Cache
             AggregateTrackedItem();            
             cache.Remove(id);
             idToRemove.Add(id);
+        }
+
+        protected internal IQueryable<T> GetCacheAsQueryable()
+        {
+            AggregateTrackedItem();
+            return cache.Values.AsQueryable<T>();
+        }
+
+        protected internal Tuple<IUnitOfWork,IQueryable<T>> GetRepositoryAsQueryable()
+        {
+            var uow = factory.CreateNew();
+            return Tuple.Create(uow, (IQueryable<T>)uow.RepositoryOf<T>());            
         }
     }
 }

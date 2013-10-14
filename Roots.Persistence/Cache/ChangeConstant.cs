@@ -8,31 +8,31 @@ using System.Threading.Tasks;
 
 namespace Roots.Persistence.Cache
 {
-    public class ConstFinder<T> : ExpressionVisitor
+    public class ChangeConstant<T> : ExpressionVisitor
     {
-
-        T constantValue;
-
-        public T Find(Expression expression)
+        ConstantExpression newConstant;
+        public Expression Replace(Expression expression,T newConstantValue)
         {
-            Visit(expression);
-            return (T)constantValue;
+            newConstant = Expression.Constant(newConstantValue,typeof(T));
+            return Visit(expression);
+            
         }
 
+
         protected override Expression VisitConstant(ConstantExpression node)
-        {              
-            if(node != null && typeof(T).IsAssignableFrom(node.Type))
+        {
+            if (node != null && typeof(T).IsAssignableFrom(node.Type))
             {
-                constantValue = (T)node.Value;
+                return newConstant;
             }
 
             return base.VisitConstant(node);
         }
-        
+
 
         protected override Expression VisitMember(MemberExpression node)
         {
-            if(typeof(T).IsAssignableFrom(node.Type))
+            if (typeof(T).IsAssignableFrom(node.Type))
             {
                 if (!typeof(T).IsAssignableFrom(node.Expression.Type))
                 {
@@ -43,17 +43,17 @@ namespace Roots.Persistence.Cache
                     var member = node.Member;
                     switch (member.MemberType)
                     {
-                        case MemberTypes.Field:                            
+                        case MemberTypes.Field:
                         case MemberTypes.Property:
-                            constantValue = (T)Expression.Lambda(node).Compile().DynamicInvoke();                            
-                            break;
+                            return newConstant;                            
                         default:
                             throw new NotSupportedException();
-                    }                    
+                    }
                 }
             }
 
             return base.VisitMember(node);
         }
+
     }
 }
