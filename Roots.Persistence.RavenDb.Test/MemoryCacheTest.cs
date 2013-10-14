@@ -47,5 +47,61 @@ namespace Roots.Persistence.RavenDb.Test
             foundFromCache.Should().Not.Be.Null();
             foundFromCache.Id.Should().Be.EqualTo(guid);
         }
+
+        [TestMethod]
+        public void ApplyingCacheAnItemAddedFromStorage_Expected_ModificationApplied()
+        {
+            var factory = new InMemoryRavenDbUnitOfWorkFactory();
+            var memCache = new MemoryCache(factory);
+            var testName = "Test";
+            var guid = Guid.NewGuid();
+            var entity = new TestEntity { Id = guid, Name = testName };
+
+
+            var foundFromCache = memCache.RepositoryOf<TestEntity>().Where(x => x.Name == testName).SingleOrDefault();
+            foundFromCache.Should().Be.Null();
+
+            memCache.RepositoryOf<TestEntity>().Add(entity);
+            memCache.Commit();
+
+            using (var uow = factory.CreateNew(IsolationLevel.ReadItsOwnWrite))
+            {
+                var found  = uow.RepositoryOf<TestEntity>().Where(x => x.Name == testName).SingleOrDefault();
+                found.Name.Should().Be.EqualTo(testName);
+                found.Id.Should().Be.EqualTo(guid);
+            }            
+
+        }
+
+
+        [TestMethod]
+        public void RemovingFromCacheAnItemInTheStorage_Expected_ItemRemoved()
+        {
+            var factory = new InMemoryRavenDbUnitOfWorkFactory();
+            var memCache = new MemoryCache(factory);
+            var testName = "Test";
+            var guid = Guid.NewGuid();
+            var entity = new TestEntity { Id = guid, Name = testName };
+
+            using (var uow = factory.CreateNew())
+            {
+                uow.RepositoryOf<TestEntity>().Add(entity);
+                uow.Commit();
+            }
+
+            memCache.RepositoryOf<TestEntity>().RemoveById(guid);
+            memCache.Commit();
+
+            using (var uow = factory.CreateNew(IsolationLevel.ReadItsOwnWrite))
+            {
+                var found = uow.RepositoryOf<TestEntity>().Where(x => x.Name == testName).SingleOrDefault();
+                found.Name.Should().Be.Null();                
+            }    
+        }
+
+
+
+
+        // add evicted/removed/deleted items support so to not make it appear in subsequent queryes
     }
 }

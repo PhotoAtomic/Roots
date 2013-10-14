@@ -114,10 +114,10 @@ namespace Roots.Persistence.RavenDb
 
         protected string KeyForId(IDocumentStore store, object id)
         {
-            object instance = default(T);
+            object instance = Activator.CreateInstance<T>();
             GetIdProperty().SetValue(instance, id);
-
-            var key = store.Conventions.GenerateDocumentKey(string.Empty, null, instance);
+            //HINT is store.Identifier correct here?
+            var key = store.Conventions.GenerateDocumentKey(store.Identifier, store.DatabaseCommands, instance);
             return key;
         }
     }
