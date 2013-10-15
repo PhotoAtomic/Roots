@@ -29,6 +29,7 @@ namespace Roots.Persistence.RavenDb
             SetupKeyTypeLockRule(documentStore);
 
             documentStore.Initialize();
+            
         }
 
         protected virtual IDocumentStore MakeDocumentStore(string connectionString)

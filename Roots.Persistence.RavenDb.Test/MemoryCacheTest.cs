@@ -78,6 +78,7 @@ namespace Roots.Persistence.RavenDb.Test
         public void RemovingFromCacheAnItemInTheStorage_Expected_ItemRemoved()
         {
             var factory = new InMemoryRavenDbUnitOfWorkFactory();
+            
             var memCache = new MemoryCache(factory);
             var testName = "Test";
             var guid = Guid.NewGuid();
@@ -95,13 +96,45 @@ namespace Roots.Persistence.RavenDb.Test
             using (var uow = factory.CreateNew(IsolationLevel.ReadItsOwnWrite))
             {
                 var found = uow.RepositoryOf<TestEntity>().Where(x => x.Name == testName).SingleOrDefault();
-                found.Name.Should().Be.Null();                
+                found.Should().Be.Null();                
             }    
         }
 
 
+        [TestMethod]
+        public void QueryingARemovedItem_Expected_ItemNotRetrieved()
+        {
+            var factory = new InMemoryRavenDbUnitOfWorkFactory();
 
+            var memCache = new MemoryCache(factory);
+            var testName = "Test";
+            var guid = Guid.NewGuid();
+            var entity = new TestEntity { Id = guid, Name = testName };
 
-        // add evicted/removed/deleted items support so to not make it appear in subsequent queryes
+            using (var uow = factory.CreateNew())
+            {
+                uow.RepositoryOf<TestEntity>().Add(entity);
+                uow.Commit();
+            }
+
+            memCache.RepositoryOf<TestEntity>().Where(x => x.Name == testName).Count().Should().Be(1);
+            memCache.RepositoryOf<TestEntity>().RemoveById(guid);
+            memCache.RepositoryOf<TestEntity>().Where(x => x.Name == testName).Count().Should().Be(0);
+            
+
+            using (var uow = factory.CreateNew(IsolationLevel.ReadItsOwnWrite))
+            {
+                var found = uow.RepositoryOf<TestEntity>().GetById(guid);
+                found.Should().Not.Be.Null();
+            }
+
+            memCache.Commit();
+
+            using (var uow = factory.CreateNew(IsolationLevel.ReadItsOwnWrite))
+            {
+                var found = uow.RepositoryOf<TestEntity>().GetById(guid);
+                found.Should().Be.Null();
+            }
+        }
     }
 }

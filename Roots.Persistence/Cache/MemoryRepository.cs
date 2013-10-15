@@ -11,7 +11,7 @@ namespace Roots.Persistence.Cache
     {
         protected internal IDictionary<object,T> cache = new Dictionary<object,T>();
         protected internal IDictionary<object, T> track = new Dictionary<object, T>();
-        private ISet<object> idToRemove = new HashSet<object>();
+        protected internal ISet<object> idToRemove = new HashSet<object>();
         private IUnitOfWorkFactory factory;
         private PropertyInfo idProperty;
         

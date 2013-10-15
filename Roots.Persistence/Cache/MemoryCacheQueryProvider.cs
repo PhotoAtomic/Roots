@@ -72,7 +72,8 @@ namespace Roots.Persistence.Cache
             var enumerator = new MemoryCacheEnumerator<T>(
                 localEnum,
                 remoteEnum,
-                x => repository.Track(x),
+                repository.idToRemove,
+                x => repository.Track(x),                
                 repository.GetIdProperty(),
                 remoteSession);
 

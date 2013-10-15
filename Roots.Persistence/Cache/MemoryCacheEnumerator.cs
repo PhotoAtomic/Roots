@@ -14,22 +14,27 @@ namespace Roots.Persistence.Cache
         private IDisposable[] disposables;
         private Action<T> track;
 
-        public MemoryCacheEnumerator(IEnumerable<T> localEnum, IEnumerable<T> remoteEnum, Action<T> track, PropertyInfo idProperty, params IDisposable[] disposables)
+        public MemoryCacheEnumerator(IEnumerable<T> localEnum, IEnumerable<T> remoteEnum, ISet<object> evicted, Action<T> track, PropertyInfo idProperty, params IDisposable[] disposables)
         {
             this.disposables = disposables;
             this.track = track;
 
-            internalEnumerator= 
-                localEnum.Union(remoteEnum,
-                 new ItemEqualityComparer<T>(
+            var enumeratorExpression= 
+                localEnum
+                .Union(remoteEnum,
+                    new ItemEqualityComparer<T>(
                         (x, y) => idProperty.GetValue(x) == idProperty.GetValue(y),
                         x =>
                         {
                             var value = idProperty.GetValue(x);
                             if (value == null) return 0;
                             return value.GetHashCode();
-                        }))
-                        .GetEnumerator();
+                        }));
+            if (evicted != null)
+            {
+                enumeratorExpression = enumeratorExpression.Where(x => !evicted.Contains(idProperty.GetValue(x)));
+            }
+            internalEnumerator = enumeratorExpression.GetEnumerator();
         }
 
         public T Current

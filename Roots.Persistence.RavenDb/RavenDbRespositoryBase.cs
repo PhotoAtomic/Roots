@@ -1,4 +1,5 @@
 ﻿using Raven.Client;
+using Raven.Client.Document;
 using Raven.Client.Linq;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace Roots.Persistence.RavenDb
 
         private readonly IsolationLevel isolationLevel;
 
+        private GenerateEntityIdOnTheClient keyGenerator;
 
         private IRavenQueryable<T> repository;
         protected IRavenQueryable<T> Repository
@@ -44,7 +46,7 @@ namespace Roots.Persistence.RavenDb
         public RavenDbRespositoryBase(Func<Type, PropertyInfo> getIdentityProperty, IsolationLevel isolationLevel = IsolationLevel.None)
         {
             this.isolationLevel = isolationLevel;
-            this.getIdentityProperty = getIdentityProperty;
+            this.getIdentityProperty = getIdentityProperty;            
         }
 
 
@@ -115,10 +117,18 @@ namespace Roots.Persistence.RavenDb
         protected string KeyForId(IDocumentStore store, object id)
         {
             object instance = Activator.CreateInstance<T>();
-            GetIdProperty().SetValue(instance, id);
-            //HINT is store.Identifier correct here?
-            var key = store.Conventions.GenerateDocumentKey(store.Identifier, store.DatabaseCommands, instance);
+            GetIdProperty().SetValue(instance, id);            
+            
+            string key;
+            GetKeyGenerator(store).TryGetIdFromInstance(instance,out key);
             return key;
+        }
+
+        private GenerateEntityIdOnTheClient GetKeyGenerator(IDocumentStore store)
+        {
+            if (keyGenerator != null) return keyGenerator;
+            keyGenerator = new GenerateEntityIdOnTheClient(store, x => store.Conventions.GenerateDocumentKey(store.Identifier, store.DatabaseCommands, x));
+            return keyGenerator;
         }
     }
 }
