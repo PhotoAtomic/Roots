@@ -47,7 +47,7 @@ namespace Roots.Persistence.Cache
 
         public object Execute(System.Linq.Expressions.Expression expression)
         {
-            var constFinder = new ConstFinder<MemoryRepository<T>>();
+            var constFinder = new ConstFinder<MemoryRepositoryBase<T>>();
             var repository = constFinder.Find(expression);
             repository.AggregateTrackedItem();
 
