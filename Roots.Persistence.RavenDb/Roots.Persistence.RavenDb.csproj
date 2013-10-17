@@ -47,6 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\RavenDbAsyncRepositoryForCache.cs" />
+    <Compile Include="Cache\RavenDbAsyncUnitOfWorkForCache.cs" />
+    <Compile Include="Cache\RavenDbQueryProviderForCache.cs" />
+    <Compile Include="Cache\RavenDbUnitOfWorkFactoryForMemoryCache.cs" />
     <Compile Include="RavenDbAsyncRepository.cs" />
     <Compile Include="RavenDbAsyncUnitOfWork.cs" />
     <Compile Include="RavenDbQueryableAsyncExtensions.cs" />
@@ -60,6 +64,10 @@
     <ProjectReference Include="..\PhotoAtomic.ComposableExtensions\PhotoAtomic.ComposableExtensions.csproj">
       <Project>{f528a192-3dad-419d-9e39-cc88a7870006}</Project>
       <Name>PhotoAtomic.ComposableExtensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PhotoAtomic.Extensions\PhotoAtomic.Extensions.csproj">
+      <Project>{e23ec3e6-c17a-4384-bd2c-867976b73564}</Project>
+      <Name>PhotoAtomic.Extensions</Name>
     </ProjectReference>
     <ProjectReference Include="..\PhotoAtomic.Reflection\PhotoAtomic.Reflection.csproj">
       <Project>{50c68791-06c1-4d21-8b33-800cec9b9351}</Project>
@@ -80,6 +88,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

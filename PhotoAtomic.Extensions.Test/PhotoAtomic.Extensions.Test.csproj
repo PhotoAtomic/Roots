@@ -60,11 +60,13 @@
     <Compile Include="InheritanceDistanceTestTypes\ClassBase.cs" />
     <Compile Include="InheritanceDistanceTestTypes\ClassDerived.cs" />
     <Compile Include="InheritanceDistanceTestTypes\ClassIntermediate.cs" />
+    <Compile Include="InheritanceDistanceTestTypes\GenericClass%27T.cs" />
     <Compile Include="InheritanceDistanceTestTypes\ICommon.cs" />
     <Compile Include="InheritanceDistanceTestTypes\IInterfaceBase.cs" />
     <Compile Include="InheritanceDistanceTestTypes\IInterfaceDerived.cs" />
     <Compile Include="InheritanceDistanceTestTypes\IInterfaceIntermediate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeExtensionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PhotoAtomic.Extensions\PhotoAtomic.Extensions.csproj">

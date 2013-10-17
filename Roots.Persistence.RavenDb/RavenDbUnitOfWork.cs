@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Transactions;
 
@@ -11,12 +12,12 @@ namespace Roots.Persistence.RavenDb
     {
         private IDocumentSession documentSession;
         private IDocumentStore documentStore;
-        private ICollection<IDisposable> trackedRepositories;
+        private IDictionary<Type,IDisposable> trackedRepositories;
         private IsolationLevel isolationLevel;
 
         public RavenDbUnitOfWork(IDocumentStore documentStore, IsolationLevel isolationLevel = IsolationLevel.None)
         {
-            trackedRepositories = new List<IDisposable>();
+            trackedRepositories = new Dictionary<Type, IDisposable>();
             this.documentStore = documentStore;
             this.isolationLevel = isolationLevel;
             this.documentSession = documentStore.OpenSession(); //HINT: make Lazy (also on the async version)
@@ -28,11 +29,19 @@ namespace Roots.Persistence.RavenDb
 
         public IRepository<T> RepositoryOf<T>()
         {
+            IDisposable foundRepository;
+            if (trackedRepositories.TryGetValue(typeof(T), out foundRepository)) return (IRepository<T>)foundRepository;
+            var newRepository = MakeNewRepository<T>(documentSession,documentStore.Conventions.GetIdentityProperty,isolationLevel);
+            trackedRepositories.Add(typeof(T),newRepository);
+            return newRepository;
+        }
+
+        protected virtual RavenDbRepository<T> MakeNewRepository<T>(IDocumentSession documentSession, Func<Type, PropertyInfo> getIdentityProperty, IsolationLevel isolationLevel)
+        {
             var newRepository = new RavenDbRepository<T>(
                 documentSession,
                 documentStore.Conventions.GetIdentityProperty,
                 isolationLevel);
-            trackedRepositories.Add(newRepository);
             return newRepository;
         }
 
@@ -61,7 +70,7 @@ namespace Roots.Persistence.RavenDb
             if (trackedRepositories == null) return;
             foreach (var repository in trackedRepositories)
             {
-                repository.Dispose();
+                repository.Value.Dispose();
             }
             trackedRepositories.Clear();
         }

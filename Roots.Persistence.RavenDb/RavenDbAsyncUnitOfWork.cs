@@ -2,22 +2,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
 
 namespace Roots.Persistence.RavenDb
 {
-    class RavenDbAsyncUnitOfWork : IAsyncUnitOfWork
+    public class RavenDbAsyncUnitOfWork : IAsyncUnitOfWork
     {
         private IAsyncDocumentSession documentSession;
         private IDocumentStore documentStore;
-        private ICollection<IDisposable> trackedRepositories;
+        private IDictionary<Type,IDisposable> trackedRepositories;
         private IsolationLevel isolationLevel;
 
         public RavenDbAsyncUnitOfWork(IDocumentStore documentStore, IsolationLevel isolationLevel = IsolationLevel.None)
         {
-            trackedRepositories = new List<IDisposable>();
+            trackedRepositories = new Dictionary<Type, IDisposable>();
             this.isolationLevel = isolationLevel;
             this.documentStore = documentStore;
             if (Transaction.Current != null) throw new Exception("RavenDb doesn't support Async in DTC transactions, thanks ayende.");
@@ -30,11 +31,19 @@ namespace Roots.Persistence.RavenDb
 
         public IAsyncRepository<T> RepositoryOf<T>()
         {
+            IDisposable foundRepository;
+            if (trackedRepositories.TryGetValue(typeof(T), out foundRepository)) return (IAsyncRepository<T>)foundRepository;
+            var newRepository = MakeNewRepository<T>(documentSession, documentStore.Conventions.GetIdentityProperty, isolationLevel);
+            trackedRepositories.Add(typeof(T),newRepository);
+            return newRepository;
+        }
+
+        protected virtual RavenDbAsyncRepository<T> MakeNewRepository<T>(IAsyncDocumentSession documentSession, Func<Type, PropertyInfo> getIdentityProperty, IsolationLevel isolationLevel)
+        {
             var newRepository = new RavenDbAsyncRepository<T>(
-                documentSession, 
-                documentStore.Conventions.GetIdentityProperty, 
+                documentSession,
+                documentStore.Conventions.GetIdentityProperty,
                 isolationLevel);
-            trackedRepositories.Add(newRepository);
             return newRepository;
         }
 
@@ -64,7 +73,7 @@ namespace Roots.Persistence.RavenDb
             if (trackedRepositories == null) return;
             foreach (var repository in trackedRepositories)
             {
-                repository.Dispose();
+                repository.Value.Dispose();
             }
             trackedRepositories.Clear();
         }

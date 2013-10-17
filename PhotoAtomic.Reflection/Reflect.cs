@@ -20,6 +20,16 @@
                 throw new InvalidOperationException("Lambda is not a method call");
             }
 
+            public static string NameOf<T,TOut>(Expression<Func<T,TOut>> action)
+            {
+                var expression = action.Body as System.Linq.Expressions.MemberExpression;
+                if (expression != null)
+                {
+                    return expression.Member.Name;
+                }
+                throw new InvalidOperationException("Lambda is not a method call");
+            }
+
             public static MethodInfo CallGenericOn<T>(Expression<Action<T>> action, params Type[] types)
             {
                 return

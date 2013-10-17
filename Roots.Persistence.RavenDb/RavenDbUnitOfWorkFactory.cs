@@ -14,7 +14,7 @@ namespace Roots.Persistence.RavenDb
 {
     public class RavenDbUnitOfWorkFactory : IUnitOfWorkFactory
     {
-        private IDocumentStore documentStore;
+        protected IDocumentStore documentStore;
         
         public RavenDbUnitOfWorkFactory(string connectionString)
         {
@@ -69,13 +69,13 @@ namespace Roots.Persistence.RavenDb
             return identityProperty.GetValue(o);            
         }
 
-        public IUnitOfWork CreateNew(IsolationLevel isolationLevel = IsolationLevel.None)
+        public virtual IUnitOfWork CreateNew(IsolationLevel isolationLevel = IsolationLevel.None)
         {
             return new RavenDbUnitOfWork(documentStore, isolationLevel);
         }
 
 
-        public Roots.Persistence.IAsyncUnitOfWork CreateAsyncNew(IsolationLevel isolationLevel = IsolationLevel.None)
+        public virtual IAsyncUnitOfWork CreateAsyncNew(IsolationLevel isolationLevel = IsolationLevel.None)
         {
             return new RavenDbAsyncUnitOfWork(documentStore, isolationLevel);
         }   

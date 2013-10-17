@@ -39,27 +39,27 @@ namespace Roots.Persistence.RavenDb
             documentSession.Delete<T>(item);
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public virtual IEnumerator<T> GetEnumerator()
         {            
             return Repository.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return ((System.Collections.IEnumerable)Repository).GetEnumerator();
+            return GetEnumerator();
         }
 
-        public Type ElementType
+        public virtual Type ElementType
         {
             get { return Repository.ElementType; }
         }
 
-        public System.Linq.Expressions.Expression Expression
+        public virtual System.Linq.Expressions.Expression Expression
         {
             get { return Repository.Expression; }
         }
 
-        public IQueryProvider Provider
+        public virtual IQueryProvider Provider
         {
             get { return Repository.Provider; }
         }

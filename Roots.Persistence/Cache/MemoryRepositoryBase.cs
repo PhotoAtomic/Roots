@@ -77,7 +77,7 @@ namespace Roots.Persistence.Cache
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return (Provider.Execute<System.Collections.IEnumerable>(Expression)).GetEnumerator();
+            return GetEnumerator();
         }
 
         public Type ElementType

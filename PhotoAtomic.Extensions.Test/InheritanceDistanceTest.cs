@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PhotoAtomic.Extensions.Test.InheritanceDistanceTestTypes;
 using SharpTestsEx;
+using System.Collections.Generic;
 
 namespace PhotoAtomic.Extensions.Test
 {
@@ -41,6 +42,32 @@ namespace PhotoAtomic.Extensions.Test
         {
             typeof(ClassDerived).SpecificityDistance(typeof(ICommon)).Should().Be(2);
         }
+
+        [TestMethod]
+        public void GenericBaseType()
+        {
+            typeof(GenericClass<int>).SpecificityDistance(typeof(GenericClass<>)).Should().Be(1);
+        }
+
+        [TestMethod]
+        public void GenericBaseType2()
+        {
+            typeof(GenericClass<int>).SpecificityDistance(typeof(GenericClass<int>)).Should().Be(0);
+        }
+
+        [TestMethod]
+        public void GenericBaseType3()
+        {
+            typeof(GenericClass<IEnumerable<int>>).SpecificityDistance(typeof(GenericClass<IEnumerable<int>>)).Should().Be(0);
+        }
+
+        [TestMethod]
+        public void GenericBaseType4()
+        {
+            typeof(GenericClass<IEnumerable<int>>).SpecificityDistance(typeof(GenericClass<>)).Should().Be(1);
+        }
+
+        
 
     }
 }

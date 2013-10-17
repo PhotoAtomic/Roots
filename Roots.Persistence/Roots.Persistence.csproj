@@ -47,11 +47,13 @@
     <Compile Include="Cache\MakeLambdaOnParameter.cs" />
     <Compile Include="Cache\AsyncMemoryCache.cs" />
     <Compile Include="Cache\MemoryCacheEnumerator.cs" />
+    <Compile Include="Cache\MemoryCacheExtensions.cs" />
     <Compile Include="Cache\MemoryCacheQueryProvider.cs" />
     <Compile Include="Cache\MemoryQueryable.cs" />
     <Compile Include="Cache\AsyncMemoryRepository.cs" />
     <Compile Include="Cache\MemoryRepository.cs" />
     <Compile Include="Cache\MemoryRepositoryBase.cs" />
+    <Compile Include="Cache\QueryableAsyncForMemoryCacheExtensions.cs" />
     <Compile Include="Cache\SubexpressionChanger.cs" />
     <Compile Include="Cache\TypeDisassembler.cs" />
     <Compile Include="IsolationLevel.cs" />
