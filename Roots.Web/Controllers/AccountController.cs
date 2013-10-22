@@ -20,7 +20,7 @@ namespace Roots.Web.Controllers
     public class AccountController : Controller
     {
         [ImportingConstructor]
-        public AccountController(IUnitOfWorkFactory factory) 
+        public AccountController([Import("Roots:cacheFactory")]IUnitOfWorkFactory factory) 
         {
             //IdentityManager = new AuthenticationIdentityManager(new IdentityStore());
             IdentityManager = new AuthenticationIdentityManager(new Roots.Identification.IdentityStore(factory));

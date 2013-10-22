@@ -12,7 +12,7 @@ namespace Roots.Persistence.RavenDb.Test
 
         public class Accessor<T> : RavenDbRespositoryBase<T>
         {
-            public Accessor(Func<Type,PropertyInfo> generator):base(generator)
+            public Accessor(Func<Type,PropertyInfo> generator):base(null, generator)
             {
 
             }
@@ -25,6 +25,11 @@ namespace Roots.Persistence.RavenDb.Test
             protected override Raven.Client.Linq.IRavenQueryable<T> GetRavenQueryable()
             {
                 throw new NotImplementedException();
+            }
+
+            public override void Dispose()
+            {
+                
             }
         }
 

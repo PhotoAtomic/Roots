@@ -5,10 +5,11 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using PhotoAtomic.Reflection;
 
 namespace Roots.Persistence.Cache
 {
-    public class MemoryRepositoryBase<T>: IQueryable<T>
+    public abstract class MemoryRepositoryBase<T>: IQueryable<T>
     {
         protected internal IDictionary<object, T> cache = new Dictionary<object, T>();
         protected internal IDictionary<object, T> track = new Dictionary<object, T>();
@@ -63,12 +64,41 @@ namespace Roots.Persistence.Cache
             return GetIdProperty().GetValue(item);
         }
 
+        protected bool TryConvertId(object id, out object convertedId)
+        {
+            return Conversion.Try(id, id.GetType(), GetIdProperty().PropertyType, out convertedId);
+        }
+
         internal void Track(T item)
         {
             if (item == null) return;
             object id = GetIdValue(item);
             track[id] = item;
         }
+
+        protected void SetIdIfMissing(T item)
+        {
+            using (var generator = GetIdGenerator())
+            {
+                if(generator == null) return;
+
+                var idProperty = GetIdProperty();
+
+                var value = idProperty.GetValue(item);
+
+                if (value!=null && !Activator.CreateInstance(idProperty.PropertyType).Equals(value)) return;
+
+                object id = generator.GenerateNewId();
+                if(id == null) return;
+                
+
+                if(!Conversion.Try(id, id.GetType(), idProperty.PropertyType, out id)) return;
+                idProperty.SetValue(item, id);
+            }
+        }
+
+        public abstract IIdGenerator GetIdGenerator();
+        
 
         public IEnumerator<T> GetEnumerator()
         {
@@ -96,5 +126,7 @@ namespace Roots.Persistence.Cache
             get;
             private set;
         }
+
+        
     }
 }

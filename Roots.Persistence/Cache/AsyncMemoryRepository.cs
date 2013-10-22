@@ -47,21 +47,29 @@ namespace Roots.Persistence.Cache
         {
             AggregateTrackedItem();
             T item;
-            if (cache.TryGetValue(id, out item)) return item;
+
+            object convertedId;
+            if (!TryConvertId(id, out convertedId)) return default(T);
+
+            if (cache.TryGetValue(convertedId, out item)) return item;
             using (var uow = factory.CreateAsyncNew())
             {
-                item = await uow.RepositoryOf<T>().GetByIdAsync(id);
+                item = await uow.RepositoryOf<T>().GetByIdAsync(convertedId);
             }
             if (item == null) return default(T);
-            cache[id] = item;
+            cache[convertedId] = item;
             return item;
         }
 
         public Task RemoveByIdAsync(object id)
         {
             AggregateTrackedItem();
-            cache.Remove(id);
-            idToRemove.Add(id);
+
+            object convertedId;
+            if (!TryConvertId(id, out convertedId)) return Task.FromResult(false);
+
+            cache.Remove(convertedId);
+            idToRemove.Add(convertedId);
             return Task.FromResult(true);
         }
 
@@ -69,6 +77,9 @@ namespace Roots.Persistence.Cache
         {
             AggregateTrackedItem();
             if (item == null) throw new ArgumentNullException("item");
+
+            SetIdIfMissing(item);
+
             var id = GetIdValue(item);
             cache[id] = item;
             return Task.FromResult(true);
@@ -84,5 +95,12 @@ namespace Roots.Persistence.Cache
             return Task.FromResult(true);
         }
 
+
+        public override IIdGenerator GetIdGenerator()
+        {
+            
+            return factory.CreateAsyncNew().RepositoryOf<T>() as IIdGenerator;
+            
+        }
     }
 }

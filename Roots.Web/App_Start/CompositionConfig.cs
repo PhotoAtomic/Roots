@@ -43,6 +43,10 @@ namespace Roots.Web
                 .SetCreationPolicy(CreationPolicy.Shared)
                 .ExportInterfaces(x => x.IsPublic);
 
+            registrationBuilder
+                .ForType<UnitOfWorkFactoryForCachePart>()
+                .SetCreationPolicy(CreationPolicy.Shared)
+                .ExportInterfaces(x => x.IsPublic);
            
             var aggregateCatalog = new AggregateCatalog();
 

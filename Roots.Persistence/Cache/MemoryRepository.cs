@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhotoAtomic.Reflection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -25,13 +26,17 @@ namespace Roots.Persistence.Cache
         {
             AggregateTrackedItem();
             T item;
-            if (cache.TryGetValue(id, out item)) return item;
+
+            object convertedId;
+            if(!TryConvertId(id, out convertedId)) return default(T);
+
+            if (cache.TryGetValue(convertedId, out item)) return item;
             using (var uow = factory.CreateNew())
             {
-                item = uow.RepositoryOf<T>().GetById(id);                
+                item = uow.RepositoryOf<T>().GetById(convertedId);                
             }
             if (item == null) return default(T);
-            cache[id] = item;
+            cache[convertedId] = item;
             return item;
         }
 
@@ -41,7 +46,10 @@ namespace Roots.Persistence.Cache
         {
             AggregateTrackedItem();
             if (item == null) throw new ArgumentNullException("item");
-            var id = GetIdValue(item);
+
+            SetIdIfMissing(item);
+
+            var id = GetIdValue(item);            
             cache[id] = item;
         }
 
@@ -49,6 +57,7 @@ namespace Roots.Persistence.Cache
         {
             AggregateTrackedItem();
             if (item == null) throw new ArgumentNullException("item");
+
             var id = GetIdValue(item);
             cache.Remove(id);            
             idToRemove.Add(id);
@@ -77,11 +86,20 @@ namespace Roots.Persistence.Cache
 
         public void RemoveById(object id)
         {
-            AggregateTrackedItem();            
-            cache.Remove(id);
-            idToRemove.Add(id);
+            AggregateTrackedItem();
+
+            object convertedId;
+            if (!TryConvertId(id, out convertedId)) return;
+
+            cache.Remove(convertedId);
+            idToRemove.Add(convertedId);
         }
 
-       
+
+
+        public override IIdGenerator GetIdGenerator()
+        {
+            return factory.CreateNew().RepositoryOf<T>() as IIdGenerator;
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace Roots.Persistence.RavenDb
 {
     public class RavenDbUnitOfWorkFactory : IUnitOfWorkFactory
     {
-        protected IDocumentStore documentStore;
+        protected internal IDocumentStore documentStore;
         
         public RavenDbUnitOfWorkFactory(string connectionString)
         {

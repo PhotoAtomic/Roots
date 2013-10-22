@@ -13,100 +13,34 @@ namespace Roots.Identification
     public partial class IdentityStore : IUserLoginStore
     {
 
-        private class LoginEqualityComparer : IEqualityComparer<Domain.Login>
+        public Task<IdentityResult> AddAsync(IUserLogin login, System.Threading.CancellationToken cancellationToken)
         {
-
-            public bool Equals(Login x, Login y)
-            {
-                if (x == null && y == null) return true;
-                if (x == null ^ y == null) return false;
-                return x.Provider == y.Provider;
-            }
-
-            public int GetHashCode(Login obj)
-            {
-                return obj.Provider.GetHashCode();
-            }
+            throw new NotImplementedException();
         }
 
-        async Task<IdentityResult> IUserLoginStore.AddAsync(IUserLogin login, System.Threading.CancellationToken cancellationToken)
+        public IUserLogin CreateNewInstance(string userId, string loginProvider, string providerKey)
         {
-            var user = await GetUserById(login.UserId);
-            if (user == null) return IdentityResult.Failed("User not exists");
-            if (user.Logins == null) user.Logins = new List<Domain.Login>();
-        
-            user.Logins = user.Logins.AddIfNotPresent(
-                new Domain.Login
-                {
-                    Provider = login.LoginProvider,
-                    ProviderKey = login.ProviderKey,
-                },
-                new LoginEqualityComparer())
-                .ToList();
-
-            return IdentityResult.Succeeded();
-
+            throw new NotImplementedException();
         }
 
-        IUserLogin IUserLoginStore.CreateNewInstance(string userId, string loginProvider, string providerKey)
+        public Task<IEnumerable<IUserLogin>> GetLoginsAsync(string userId, System.Threading.CancellationToken cancellationToken)
         {
-            return new UserLogin
-            {                
-                UserId =  userId,
-                LoginProvider = loginProvider,
-                ProviderKey = providerKey,
-            };
+            throw new NotImplementedException();
         }
 
-        async Task<IEnumerable<IUserLogin>> IUserLoginStore.GetLoginsAsync(string userId, System.Threading.CancellationToken cancellationToken)
+        public Task<string> GetProviderKeyAsync(string userId, string loginProvider, System.Threading.CancellationToken cancellationToken)
         {
-            var user = await GetUserById(userId);
-            if (user == null) return null;
-            if (user.Logins == null) return Enumerable.Empty<UserLogin>();
-            return user.Logins.Select(x => new UserLogin(userId, x));
+            throw new NotImplementedException();
         }
 
-        async Task<string> IUserLoginStore.GetProviderKeyAsync(string userId, string loginProvider, System.Threading.CancellationToken cancellationToken)
+        public Task<string> GetUserIdAsync(string loginProvider, string providerKey, System.Threading.CancellationToken cancellationToken)
         {
-            var user = await GetUserById(userId);
-            if (user == null) return null;
-            if (user.Logins == null) return null;
-            return user.Logins.Where(x => x.Provider == loginProvider).SingleOrDefault().ProviderKey;
+            throw new NotImplementedException();
         }
 
-        async Task<string> IUserLoginStore.GetUserIdAsync(string loginProvider, string providerKey, System.Threading.CancellationToken cancellationToken)
+        Task<IdentityResult> IUserLoginStore.RemoveAsync(string userId, string loginProvider, string providerKey, System.Threading.CancellationToken cancellationToken)
         {
-            using (var uow = factory.CreateAsyncNew())
-            {
-                var user = await uow.RepositoryOf<Domain.User>()
-                    .Where(x => x.Logins.Any(y => y.Provider == providerKey && y.ProviderKey == providerKey))
-                    .SingleOrDefaultAsync();
-                if (user == null) return null;
-                var dummyUser = new User() { Guid = user.Id };
-                await GetUserById(user.Id);
-                return dummyUser.Id;
-                    
-            }
-
-        }
-
-        async Task<IdentityResult> IUserLoginStore.RemoveAsync(string userId, string loginProvider, string providerKey, System.Threading.CancellationToken cancellationToken)
-        {
-            var user = await GetUserById(userId);
-            if (user == null) return IdentityResult.Failed("User not exists");
-            if (user.Logins == null) user.Logins = new List<Domain.Login>();
-
-            var loginToRemove = new Domain.Login
-            {
-                Provider = loginProvider,
-                ProviderKey = providerKey,
-            };
-
-            user.Logins = user.Logins
-                .Except(loginToRemove.AsEnumerable(), new LoginEqualityComparer())
-                .ToList();            
-
-            return IdentityResult.Succeeded();
+            throw new NotImplementedException();
         }
     }
 }

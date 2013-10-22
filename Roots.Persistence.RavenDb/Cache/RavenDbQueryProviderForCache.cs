@@ -11,21 +11,22 @@ using System.Threading.Tasks;
 
 namespace Roots.Persistence.RavenDb.Cache
 {
-    class RavenDbQueryProviderForCache : IQueryProvider
+    class RavenDbQueryProviderForCache<T> : IQueryProvider
     {
         private IQueryProvider queryProvider;
         private IQueryable Repository;
+        private bool async;
 
-
-        public RavenDbQueryProviderForCache(IQueryProvider queryProvider, IQueryable Repository)
+        public RavenDbQueryProviderForCache(IQueryProvider queryProvider, IQueryable Repository, bool async)
         {
-            // TODO: Complete member initialization
             this.queryProvider = queryProvider;
             this.Repository = Repository;
+            this.async = async;
         }
 
         public IQueryable<TElement> CreateQuery<TElement>(System.Linq.Expressions.Expression expression)
         {
+
             throw new NotImplementedException();
         }
 

@@ -13,7 +13,7 @@ namespace Roots.Persistence.RavenDb.Cache
         public RavenDbAsyncRepositoryForCache(IAsyncDocumentSession documentSession, Func<Type, PropertyInfo> getIdentityProperty, IsolationLevel isolationLevel = IsolationLevel.None)
             : base(documentSession, getIdentityProperty, isolationLevel)
         {
-            wrappedProvider = new RavenDbQueryProviderForCache(base.Provider, Repository);    
+            wrappedProvider = new RavenDbQueryProviderForCache<T>(base.Provider, Repository, true);    
         }
 
         private IQueryProvider wrappedProvider;

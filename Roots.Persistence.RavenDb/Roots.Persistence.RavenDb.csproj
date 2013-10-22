@@ -51,6 +51,7 @@
     <Compile Include="Cache\RavenDbAsyncUnitOfWorkForCache.cs" />
     <Compile Include="Cache\RavenDbQueryProviderForCache.cs" />
     <Compile Include="Cache\RavenDbUnitOfWorkFactoryForMemoryCache.cs" />
+    <Compile Include="Cache\RavenDbUnitOfWorkFactoryWrapperForMemoryCache.cs" />
     <Compile Include="RavenDbAsyncRepository.cs" />
     <Compile Include="RavenDbAsyncUnitOfWork.cs" />
     <Compile Include="RavenDbQueryableAsyncExtensions.cs" />

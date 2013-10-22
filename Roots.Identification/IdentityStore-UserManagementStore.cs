@@ -12,48 +12,45 @@ namespace Roots.Identification
     public partial class IdentityStore : IUserManagementStore
     {
 
-        async Task<IdentityResult> IUserManagementStore.CreateAsync(IUserManagement info, CancellationToken cancellationToken)
+        public async Task<IdentityResult> CreateAsync(IUserManagement info, CancellationToken cancellationToken)
         {
-            var user = await GetUserById(info.UserId);
-            if (user == null) return IdentityResult.Failed("user not found");
-            user.Enabled = !info.DisableSignIn;
+            var user = await uow.RepositoryOf<Domain.User>().GetByIdAsync(info.UserId);
             user.LastLogInTimeUtc = info.LastSignInTimeUtc;
+            user.Enabled = !info.DisableSignIn;
             return IdentityResult.Succeeded();
         }
 
-        IUserManagement IUserManagementStore.CreateNewInstance(string userId)
+        public IUserManagement CreateNewInstance(string userId)
         {
-            return new UserManagement { UserId = userId };
+            return new UserManagement()
+            {
+                UserId = userId,
+            };
+
         }
 
-        async Task<IdentityResult> IUserManagementStore.DeleteAsync(string userId, CancellationToken cancellationToken)
+        public async Task<IdentityResult> DeleteAsync(string userId, CancellationToken cancellationToken)
         {
             return IdentityResult.Succeeded();
         }
 
-        async Task<IUserManagement> IUserManagementStore.FindAsync(string userId, CancellationToken cancellationToken)
+        public async Task<IUserManagement> FindAsync(string userId, CancellationToken cancellationToken)
         {
-            var user = await GetUserById(userId);
-            if (user == null) return null;
-            
-            var dummyUser = new User{ Guid = user.Id};
-
+            var user = await uow.RepositoryOf<Domain.User>().GetByIdAsync(userId);
             return new UserManagement
             {
                 DisableSignIn = !user.Enabled,
+                UserId = userId,
                 LastSignInTimeUtc = user.LastLogInTimeUtc,
-                UserId = dummyUser.Id,
-            };
-                            
+            };            
         }
 
-        async Task<IdentityResult> IUserManagementStore.UpdateAsync(IUserManagement info, CancellationToken cancellationToken)
+        public async Task<IdentityResult> UpdateAsync(IUserManagement info, CancellationToken cancellationToken)
         {
-            var user = await GetUserById(info.UserId);
-            if (user == null) return IdentityResult.Failed("user not found");
+            var user = await uow.RepositoryOf<Domain.User>().GetByIdAsync(info.UserId);
             user.Enabled = !info.DisableSignIn;
             user.LastLogInTimeUtc = info.LastSignInTimeUtc;
-            return IdentityResult.Succeeded();            
+            return IdentityResult.Succeeded();
         }
     }
 }

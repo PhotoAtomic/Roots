@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Roots.Persistence;
+using Roots.Persistence.Cache;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,16 @@ namespace Roots.Identification
         IIdentityStore, IUserStore, IUserLoginStore, IRoleStore, 
         IUserSecretStore, ITokenStore, IUserClaimStore, IUserManagementStore
     {
-        private readonly IUnitOfWorkFactory factory;        
+
+        private readonly IAsyncUnitOfWork uow;
+
+
         
-                
+        
         public IdentityStore(IUnitOfWorkFactory factory)
         {
-            this.factory = factory;
+            //uow = factory.CreateAsyncNew(Roots.Persistence.IsolationLevel.ReadItsOwnWrite);
+            uow = new AsyncMemoryCache(factory);
 
             Users = (IUserStore)this;
             Logins = (IUserLoginStore)this;
@@ -72,9 +77,10 @@ namespace Roots.Identification
             private set;
         }
 
-        public Task<IdentityResult> SaveChangesAsync(System.Threading.CancellationToken cancellationToken)
+        public async Task<IdentityResult> SaveChangesAsync(System.Threading.CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await uow.CommitAsync();
+            return await Task.FromResult(IdentityResult.Succeeded());
         }
 
        

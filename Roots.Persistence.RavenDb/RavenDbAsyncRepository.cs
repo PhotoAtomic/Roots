@@ -16,7 +16,7 @@ namespace Roots.Persistence.RavenDb
         private IAsyncDocumentSession documentSession;
                
         public RavenDbAsyncRepository(IAsyncDocumentSession documentSession, Func<Type, PropertyInfo> getIdentityProperty, IsolationLevel isolationLevel = IsolationLevel.None)
-            : base(getIdentityProperty, isolationLevel)
+            : base(documentSession.Advanced.DocumentStore, getIdentityProperty, isolationLevel)
         {
             this.documentSession = documentSession;
             
@@ -69,7 +69,7 @@ namespace Roots.Persistence.RavenDb
             get { return Repository.Provider; }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {         
             documentSession = null;
         }
@@ -86,7 +86,7 @@ namespace Roots.Persistence.RavenDb
             //HINT: shitty raven, i have to instanciate a type and fill t's id property to obrain its string id
             return Task.Run(() =>
             {
-                var key = KeyForId(documentSession.Advanced.DocumentStore, id);
+                var key = KeyForId(id);
                 documentSession.Advanced.Defer(new DeleteCommandData { Key = key });
             });
             

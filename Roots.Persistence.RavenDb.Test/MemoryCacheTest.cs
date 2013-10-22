@@ -5,6 +5,7 @@ using Roots.Persistence.Cache;
 using Roots.Persistence.RavenDb.Test.Types;
 using System.Linq;
 using SharpTestsEx;
+using Roots.Persistence.RavenDb.Cache;
 
 namespace Roots.Persistence.RavenDb.Test
 {
@@ -136,5 +137,41 @@ namespace Roots.Persistence.RavenDb.Test
                 found.Should().Be.Null();
             }
         }
+
+
+
+        [TestMethod]
+        public void RetrievingSingleItemItem_Expected_ItemNotRetrieved()
+        {
+            var factory = new InMemoryRavenDbUnitOfWorkFactory();
+
+            var memCache = new MemoryCache(new RavenDbUnitOfWorkFactoryWrapperForMemoryCache(factory));
+            var testName = "Test";
+
+
+            
+            var item = memCache.RepositoryOf<TestEntity>().Where(x => x.Name == testName).SingleOrDefault();
+            item.Should().Be.Null();
+            
+        }
+
+
+        [TestMethod]
+        public void RetrievingByIdOfDifferentType_Expected_ItemRetrieved()
+        {
+            var factory = new InMemoryRavenDbUnitOfWorkFactory();
+
+            var memCache = new MemoryCache(factory);
+            var testName = "Test";
+            var guid = Guid.NewGuid();
+            var entity = new TestEntity { Id = guid, Name = testName };
+
+            memCache.RepositoryOf<TestEntity>().Add(entity);
+            var retrievedEntity = memCache.RepositoryOf<TestEntity>().GetById(guid.ToString());
+
+            retrievedEntity.Should().Be.SameInstanceAs(entity);
+
+        }
+
     }
 }

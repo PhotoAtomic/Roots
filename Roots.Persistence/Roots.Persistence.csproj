@@ -56,6 +56,7 @@
     <Compile Include="Cache\QueryableAsyncForMemoryCacheExtensions.cs" />
     <Compile Include="Cache\SubexpressionChanger.cs" />
     <Compile Include="Cache\TypeDisassembler.cs" />
+    <Compile Include="IIdGenerator.cs" />
     <Compile Include="IsolationLevel.cs" />
     <Compile Include="Cache\MemoryCache.cs" />
     <Compile Include="QueryableAsyncExtensions.cs" />

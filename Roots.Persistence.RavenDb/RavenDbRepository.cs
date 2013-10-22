@@ -1,4 +1,5 @@
-﻿using Raven.Abstractions.Commands;
+﻿using PhotoAtomic.Reflection;
+using Raven.Abstractions.Commands;
 using Raven.Client;
 using Raven.Client.Linq;
 using System;
@@ -14,7 +15,7 @@ namespace Roots.Persistence.RavenDb
         private IDocumentSession documentSession;
         
         public RavenDbRepository(IDocumentSession documentSession, Func<Type, PropertyInfo> getIdentityProperty, IsolationLevel isolationLevel = IsolationLevel.None)
-            : base(getIdentityProperty, isolationLevel)
+            : base(documentSession.Advanced.DocumentStore, getIdentityProperty, isolationLevel)
         {
             
             this.documentSession = documentSession;            
@@ -64,7 +65,7 @@ namespace Roots.Persistence.RavenDb
             get { return Repository.Provider; }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {            
             documentSession = null;
         }
@@ -77,8 +78,9 @@ namespace Roots.Persistence.RavenDb
 
         public void RemoveById(object id)
         {
-            var key = KeyForId(documentSession.Advanced.DocumentStore, id);
+            var key = KeyForId(id);
             documentSession.Advanced.Defer(new DeleteCommandData { Key = key });
         }
+       
     }
 }

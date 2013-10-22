@@ -2,6 +2,7 @@
 using Roots.Persistence.RavenDb;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Reflection;
 using System.Web;
@@ -9,9 +10,11 @@ using System.Web.Configuration;
 
 namespace Roots.Web.Parts
 {
+    [Export (typeof(IUnitOfWorkFactory))]
+    [Export(typeof(UnitOfWorkFactoryPart))]
     public class UnitOfWorkFactoryPart : IUnitOfWorkFactory
     {
-        IUnitOfWorkFactory factory;
+        protected internal RavenDbUnitOfWorkFactory factory;
 
         public UnitOfWorkFactoryPart()
         {

@@ -177,6 +177,7 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Parts\UnitOfWorkFactoryForCachePart.cs" />
     <Compile Include="Parts\UnitOfWorkFactoryPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />

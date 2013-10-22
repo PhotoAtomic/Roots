@@ -33,50 +33,20 @@ namespace Roots.Identification
         }
 
 
-        async Task<IdentityResult> IUserClaimStore.AddAsync(IUserClaim userClaim, CancellationToken cancellationToken)
+
+        public Task<IdentityResult> AddAsync(IUserClaim userClaim, CancellationToken cancellationToken)
         {
-            var user = await GetUserById(userClaim.UserId);
-            if (user == null) return IdentityResult.Failed("User not exists");
-            if (user.Claims == null) user.Claims = new List<Domain.Claim>();
-            user.Claims = user.Claims.AddIfNotPresent(
-                new Domain.Claim
-                {
-                    Type = userClaim.ClaimType,
-                    Value = userClaim.ClaimValue,
-                },
-                new ClaimEqualityComparer())
-            .ToList();
-
-
-            return IdentityResult.Succeeded();
-
+            throw new NotImplementedException();
         }
 
-        async Task<IEnumerable<IUserClaim>> IUserClaimStore.GetUserClaimsAsync(string userId, CancellationToken cancellationToken)
+        public Task<IEnumerable<IUserClaim>> GetUserClaimsAsync(string userId, CancellationToken cancellationToken)
         {
-            var user = await GetUserById(userId);
-            if (user == null) return null;
-            if (user.Claims == null) return Enumerable.Empty<UserClaim>();
-            return user.Claims.Select(x => new UserClaim(userId, x));
+            throw new NotImplementedException();
         }
 
-        async Task<IdentityResult> IUserClaimStore.RemoveAsync(string userId, string claimType, string claimValue, CancellationToken cancellationToken)
+        Task<IdentityResult> IUserClaimStore.RemoveAsync(string userId, string claimType, string claimValue, CancellationToken cancellationToken)
         {
-            var user = await GetUserById(userId);
-            if (user == null) return IdentityResult.Failed("User not exists");
-            if (user.Claims == null) user.Claims = new List<Domain.Claim>();
-
-            var claimToRemove = new Domain.Claim
-            {
-                Type = claimType,
-                Value = claimValue,
-            };
-
-            user.Claims = user.Claims
-                .Except(claimToRemove.AsEnumerable(), new ClaimEqualityComparer())
-                .ToList();
-
-            return IdentityResult.Succeeded();
+            throw new NotImplementedException();
         }
     }
 }
