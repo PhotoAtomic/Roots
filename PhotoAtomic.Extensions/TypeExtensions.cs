@@ -19,7 +19,7 @@ namespace PhotoAtomic.Extensions
                 if (baseType.IsGenericTypeDefinition)
                 {
                     if (descendantType.GetGenericTypeDefinition() == baseType) return 1;
-                    //else throw new NotSupportedException();
+                    else throw new NotSupportedException();
                 }
                 else if (descendantType.GetGenericTypeDefinition() == baseType.GetGenericTypeDefinition())
                 {

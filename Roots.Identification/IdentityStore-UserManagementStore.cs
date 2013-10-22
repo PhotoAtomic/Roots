@@ -29,9 +29,9 @@ namespace Roots.Identification
 
         }
 
-        public async Task<IdentityResult> DeleteAsync(string userId, CancellationToken cancellationToken)
+        public Task<IdentityResult> DeleteAsync(string userId, CancellationToken cancellationToken)
         {
-            return IdentityResult.Succeeded();
+            return Task.FromResult(IdentityResult.Succeeded());
         }
 
         public async Task<IUserManagement> FindAsync(string userId, CancellationToken cancellationToken)

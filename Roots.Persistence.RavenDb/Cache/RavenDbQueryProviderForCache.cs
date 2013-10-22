@@ -49,11 +49,14 @@ namespace Roots.Persistence.RavenDb.Cache
                     .GetMethod(
                         Reflect.NameOf<object>(o => Raven.Client.LinqExtensions.ToListAsync<object>(null)));
                 var genericMethod = method.MakeGenericMethod(sequenceType);
-                var enumerableTask = genericMethod.Invoke(null, new object[] { Repository });
+                var enumerableTask = (Task)genericMethod.Invoke(null, new object[] { Repository });
 
                 var taskType = typeof(Task<>).MakeGenericType(typeof(IList<>).MakeGenericType(sequenceType));
                 var result = taskType.GetProperty(Reflect.NameOf<Task<object>,object>(t => t.Result));
 
+                
+                
+                
                 var enumerable = result.GetValue(enumerableTask);
 
                 return enumerable;

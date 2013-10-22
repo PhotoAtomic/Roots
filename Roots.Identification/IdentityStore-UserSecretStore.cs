@@ -12,11 +12,11 @@ namespace Roots.Identification
     public partial class IdentityStore : IUserSecretStore
     {
 
-        public async Task<IdentityResult> CreateAsync(IUserSecret userSecret, CancellationToken cancellationToken)
+        public Task<IdentityResult> CreateAsync(IUserSecret userSecret, CancellationToken cancellationToken)
         {
             var user = uow.RepositoryOf<Domain.User>().Where(x => x.UserName == userSecret.UserName).Single();
             user.Secret = userSecret.Secret;
-            return IdentityResult.Succeeded();
+            return Task.FromResult(IdentityResult.Succeeded());
         }
 
         public IUserSecret CreateNewInstance(string userName, string secret)
