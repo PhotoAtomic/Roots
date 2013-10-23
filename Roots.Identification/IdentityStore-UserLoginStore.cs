@@ -67,7 +67,13 @@ namespace Roots.Identification
 
         public async Task<string> GetUserIdAsync(string loginProvider, string providerKey, System.Threading.CancellationToken cancellationToken)
         {
-            var user = uow.RepositoryOf<Domain.User>().Where(x => x.Logins.Any(y => y.ProviderKey == providerKey && y.Provider == y.Provider)).SingleOrDefault();
+            var user = uow.RepositoryOf<Domain.User>().Where(x => x.Logins != null && x.Logins.Any(y => y.ProviderKey == providerKey && y.Provider == loginProvider)).FirstOrDefault();
+
+            
+
+            //var login = uow.RepositoryOf<Domain.Login>().Where(x => x.Provider == loginProvider && x.ProviderKey == providerKey).SingleOrDefault();
+            //if (login == null) return null;
+            //var user = uow.RepositoryOf<Domain.User>().Where(x => x.Logins!=null && x.Logins.Contains(login)).SingleOrDefault();
             return user.Id.ToString();
         }
 

@@ -28,24 +28,37 @@ namespace Roots.Identification
             };
         }
 
-        Task<IdentityResult> IUserSecretStore.DeleteAsync(string userName, CancellationToken cancellationToken)
+        async Task<IdentityResult> IUserSecretStore.DeleteAsync(string userName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var user = uow.RepositoryOf<Domain.User>().Where(x => x.UserName == userName).Single();
+            user.Secret = null;
+            return IdentityResult.Succeeded();
+
         }
 
-        Task<IUserSecret> IUserSecretStore.FindAsync(string userName, CancellationToken cancellationToken)
+        async Task<IUserSecret> IUserSecretStore.FindAsync(string userName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var user = uow.RepositoryOf<Domain.User>().Where(x => x.UserName == userName).Single();
+
+            return new UserSecret
+            {
+                Secret = user.Secret,
+                UserName = user.UserName,
+            };
         }
 
-        public Task<IdentityResult> UpdateAsync(string userName, string newSecret, CancellationToken cancellationToken)
+        public async Task<IdentityResult> UpdateAsync(string userName, string newSecret, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var user = uow.RepositoryOf<Domain.User>().Where(x => x.UserName == userName).Single();
+            user.Secret = newSecret;
+            return IdentityResult.Succeeded();
+
         }
 
-        public Task<bool> ValidateAsync(string userName, string loginSecret, CancellationToken cancellationToken)
+        public async Task<bool> ValidateAsync(string userName, string loginSecret, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var user = uow.RepositoryOf<Domain.User>().Where(x => x.UserName == userName).Single();
+            return user.Secret == loginSecret;
         }
     }
 }
