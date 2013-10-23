@@ -19,7 +19,10 @@ namespace PhotoAtomic.Extensions
                 if (baseType.IsGenericTypeDefinition)
                 {
                     if (descendantType.GetGenericTypeDefinition() == baseType) return 1;
-                    else throw new NotSupportedException();
+                    //TODO: write better support for this case or some test that checks that the fall throught of the else case is appropriate
+                    //at the moment it looks work but this is anyway an unhadled cas eat this point
+                    //because i don't have a real situation to test against it, very agile... :)
+                    //else throw new NotSupportedException();
                 }
                 else if (descendantType.GetGenericTypeDefinition() == baseType.GetGenericTypeDefinition())
                 {

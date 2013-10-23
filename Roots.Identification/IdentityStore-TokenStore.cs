@@ -15,31 +15,54 @@ namespace Roots.Identification
 
         async Task<IdentityResult> ITokenStore.AddAsync(IToken token, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+
+            uow.RepositoryOf<Domain.SecurityToken>().Add(new Domain.SecurityToken
+            {
+                Id = ((Token)token).Guid,
+                UtcExpireDate = token.ValidUntilUtc,
+                Value = token.Value,
+            });
+
+            return IdentityResult.Succeeded();
         }
 
         IToken ITokenStore.CreateNewInstance()
         {
-            throw new NotImplementedException();
-           
+            return new Token();
         }
 
         async Task<IToken> ITokenStore.FindAsync(string id, bool onlyIfValid, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
-           
+            var token = uow.RepositoryOf<Domain.SecurityToken>().GetById(id);
+            if (token == null) return null;
+            if (token.UtcExpireDate > DateTime.UtcNow || !onlyIfValid)
+            {
+                return new Token
+                {
+                    Guid = token.Id,
+                    UtcExpireDate = token.UtcExpireDate,
+                    Value = token.Value,
+                };
+            }            
+            return null;
+                
 
         }
 
         async Task<IdentityResult> ITokenStore.RemoveAsync(string token, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            uow.RepositoryOf<Domain.SecurityToken>().RemoveById(token);
+            return IdentityResult.Succeeded();
         }
 
         async Task<IdentityResult> ITokenStore.UpdateAsync(IToken token, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
-           
+            var tokenToUpdate = uow.RepositoryOf<Domain.SecurityToken>().GetById(token.Id);
+            tokenToUpdate.UtcExpireDate = token.ValidUntilUtc;
+            tokenToUpdate.Value = token.Value;
+
+            return IdentityResult.Succeeded();
+
         }
     }
 }

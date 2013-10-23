@@ -19,7 +19,7 @@ namespace Roots.Identification
                 UserName = user.UserName,
                 Id = Guid.Parse(user.Id),
             };
-            await uow.RepositoryOf<Domain.User>().AddAsync((Domain.User)newUser);
+            uow.RepositoryOf<Domain.User>().Add((Domain.User)newUser);
 
             ((User)user).Guid = newUser.Id;
             return IdentityResult.Succeeded();
@@ -30,14 +30,24 @@ namespace Roots.Identification
             throw new NotImplementedException();
         }
 
-        Task<IUser> IUserStore.FindAsync(string userId, CancellationToken cancellationToken)
+        async Task<IUser> IUserStore.FindAsync(string userId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var user = uow.RepositoryOf<Domain.User>().GetById(userId);
+            return new User
+            {
+                Guid = user.Id,
+                UserName = user.UserName,
+            };
         }
 
-        public Task<IUser> FindByNameAsync(string userName, CancellationToken cancellationToken)
+        public async Task<IUser> FindByNameAsync(string userName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var user = uow.RepositoryOf<Domain.User>().Where(x => x.UserName == userName).SingleOrDefault();
+            return new User
+            {
+                Guid = user.Id,
+                UserName = user.UserName,
+            };
         }
     }
 }

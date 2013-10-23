@@ -11,42 +11,37 @@ using Roots.Persistence;
 namespace Roots.Identification
 {
     public partial class IdentityStore : IUserClaimStore
-    {
+    {      
 
-        private class ClaimEqualityComparer : IEqualityComparer<Domain.Claim>
+
+        public async Task<IdentityResult> AddAsync(IUserClaim userClaim, CancellationToken cancellationToken)
         {
-
-            public bool Equals(Domain.Claim x, Domain.Claim y)
+            var user = uow.RepositoryOf<Domain.User>().GetById(userClaim.UserId);
+            if (user.Claims == null) user.Claims = new List<Domain.Claim>();
+            if (user.Claims.Any(x => x.Type == userClaim.ClaimType && x.Value == userClaim.ClaimValue)) return IdentityResult.Failed();
+            user.Claims.Add(new Domain.Claim
             {
-                if (x == null && y == null) return true;
-                if (x == null ^ y == null) return false;
-                return (x.Type == y.Type) && (x.Value == y.Value);
-            }
-
-            public int GetHashCode(Domain.Claim obj)
-            {
-                unchecked
-                {
-                    return obj.Value.GetHashCode() + obj.Type.GetHashCode();
-                }
-            }
+                Type = userClaim.ClaimType,
+                Value = userClaim.ClaimValue,
+            });
+            return IdentityResult.Succeeded();
         }
 
-
-
-        public Task<IdentityResult> AddAsync(IUserClaim userClaim, CancellationToken cancellationToken)
+        public async Task<IEnumerable<IUserClaim>> GetUserClaimsAsync(string userId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var user = uow.RepositoryOf<Domain.User>().GetById(userId);
+            if (user.Claims == null) return Enumerable.Empty<UserClaim>();
+            return user.Claims.Select(x => new UserClaim(userId, x));
         }
 
-        public Task<IEnumerable<IUserClaim>> GetUserClaimsAsync(string userId, CancellationToken cancellationToken)
+        async Task<IdentityResult> IUserClaimStore.RemoveAsync(string userId, string claimType, string claimValue, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
-        }
-
-        Task<IdentityResult> IUserClaimStore.RemoveAsync(string userId, string claimType, string claimValue, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
+            var user = uow.RepositoryOf<Domain.User>().GetById(userId);
+            if (user.Claims == null) return IdentityResult.Failed();
+            var claimToRemove = user.Claims.Where(x => x.Type == claimType && x.Value == claimValue).SingleOrDefault();
+            if (claimToRemove == null) return IdentityResult.Failed();
+            user.Claims.Remove(claimToRemove);
+            return IdentityResult.Succeeded();
         }
     }
 }

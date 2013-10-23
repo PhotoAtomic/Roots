@@ -15,7 +15,7 @@ namespace Roots.Identification
         IUserSecretStore, ITokenStore, IUserClaimStore, IUserManagementStore
     {
 
-        private readonly IAsyncUnitOfWork uow;
+        private readonly IUnitOfWork uow;
 
 
         
@@ -23,7 +23,7 @@ namespace Roots.Identification
         public IdentityStore(IUnitOfWorkFactory factory)
         {
             //uow = factory.CreateAsyncNew(Roots.Persistence.IsolationLevel.ReadItsOwnWrite);
-            uow = new AsyncMemoryCache(factory);
+            uow = new MemoryCache(factory);
 
             Users = (IUserStore)this;
             Logins = (IUserLoginStore)this;
@@ -79,7 +79,7 @@ namespace Roots.Identification
 
         public async Task<IdentityResult> SaveChangesAsync(System.Threading.CancellationToken cancellationToken)
         {
-            await uow.CommitAsync();
+            uow.Commit();
             return await Task.FromResult(IdentityResult.Succeeded());
         }
 

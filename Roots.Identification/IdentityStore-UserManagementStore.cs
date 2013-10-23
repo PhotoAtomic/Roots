@@ -14,7 +14,7 @@ namespace Roots.Identification
 
         public async Task<IdentityResult> CreateAsync(IUserManagement info, CancellationToken cancellationToken)
         {
-            var user = await uow.RepositoryOf<Domain.User>().GetByIdAsync(info.UserId);
+            var user = uow.RepositoryOf<Domain.User>().GetById(info.UserId);
             user.LastLogInTimeUtc = info.LastSignInTimeUtc;
             user.Enabled = !info.DisableSignIn;
             return IdentityResult.Succeeded();
@@ -36,7 +36,7 @@ namespace Roots.Identification
 
         public async Task<IUserManagement> FindAsync(string userId, CancellationToken cancellationToken)
         {
-            var user = await uow.RepositoryOf<Domain.User>().GetByIdAsync(userId);
+            var user = uow.RepositoryOf<Domain.User>().GetById(userId);
             return new UserManagement
             {
                 DisableSignIn = !user.Enabled,
@@ -47,7 +47,7 @@ namespace Roots.Identification
 
         public async Task<IdentityResult> UpdateAsync(IUserManagement info, CancellationToken cancellationToken)
         {
-            var user = await uow.RepositoryOf<Domain.User>().GetByIdAsync(info.UserId);
+            var user = uow.RepositoryOf<Domain.User>().GetById(info.UserId);
             user.Enabled = !info.DisableSignIn;
             user.LastLogInTimeUtc = info.LastSignInTimeUtc;
             return IdentityResult.Succeeded();

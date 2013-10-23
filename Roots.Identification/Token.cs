@@ -9,28 +9,29 @@ namespace Roots.Identification
 {
     public class Token : Domain.SecurityToken, IToken
     {
-        string IToken.Id
+        public string Id
         {
             get
             {
-                return base.Id.ToString();
+                return Guid.ToString();
             }
             set
             {
-                base.Id = Guid.Parse(value);
+                Guid = Guid.Parse(value);
             }
+        }
+
+
+        public Guid Guid
+        {
+            get;
+            set;
         }
 
         DateTime IToken.ValidUntilUtc
         {
-            get 
-            {
-                return base.UtcExpireDate;
-            }
-            set
-            {
-                base.UtcExpireDate = value;
-            }
+            get;
+            set;
         }
     }
 }

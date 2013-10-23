@@ -54,8 +54,8 @@ namespace Roots.Persistence.RavenDb.Cache
                 var taskType = typeof(Task<>).MakeGenericType(typeof(IList<>).MakeGenericType(sequenceType));
                 var result = taskType.GetProperty(Reflect.NameOf<Task<object>,object>(t => t.Result));
 
-                
-                
+
+                throw new NotImplementedException("i have to stop here because it doesn't look there is an obvious way to make the enumerableTask Task to run as usually this method is called in a continuation of a task, maybe we should use a different scheduler? i don't know. a tthe moemtn i don't have time to investigate, Test works by removing this exception because they are not executed from a continuation task, anyway real code will not");
                 
                 var enumerable = result.GetValue(enumerableTask);
 
