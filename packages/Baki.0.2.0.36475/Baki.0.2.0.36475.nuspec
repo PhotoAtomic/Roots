@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Baki</id>
+    <version>0.2.0.36475</version>
+    <title>Baki</title>
+    <authors>Ricky Supit</authors>
+    <owners>Ricky Supit</owners>
+    <licenseUrl>https://github.com/rasupit/Baki/licence.txt</licenseUrl>
+    <projectUrl>https://github.com/rasupit/Baki</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A small library help to simplify the creation of Windows Service application.</description>
+    <releaseNotes />
+    <copyright>Copyright 2012</copyright>
+    <language />
+    <tags>Baki WindowsService</tags>
+  </metadata>
+</package>
