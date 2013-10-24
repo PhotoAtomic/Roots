@@ -5,17 +5,18 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 using Baki;
+using System.ComponentModel;
 
 namespace Roots.FileSystemService
 {
+    /// <summary>
+    /// WARNING: all this project is a test, it is not intented to be production grade code!
+    /// </summary>
     static class Program
-    {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+    {        
         static void Main()
-        {
-            WindowsService.Run<Host>(null);
+        {            
+            WindowsService.Run<FileSystemWatcherService>(null);            
         }
     }
 }
