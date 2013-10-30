@@ -1,9 +1,14 @@
-﻿using System;
+﻿using Roots.Connectors.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Roots.FileSystemService
 {
@@ -76,6 +81,16 @@ namespace Roots.FileSystemService
             {
                 Task.Run(() => notificationCallback(this));
             }
+        }
+
+        public IEnumerable<string> GetModifiedFilesPath()
+        {
+            var modifiedFiles  = Enumerable.Union(
+                tracks.Select(x => x.Value).Where(x => x.IsValid),
+                deletedFiles.Where(x => x.IsValid))
+                .Select(x=>x.FullPath);
+            return modifiedFiles;            
+
         }
     }
 }

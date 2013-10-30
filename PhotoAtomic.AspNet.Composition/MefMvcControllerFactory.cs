@@ -22,9 +22,12 @@ namespace PhotoAtomic.AspNet.Composition
         protected override IController GetControllerInstance(
             RequestContext requestContext, Type controllerType)
         {
-            var export = _compositionContainer
+            Lazy<object, object> export = null;
+            if (controllerType == null) return null;
+            
+            export = _compositionContainer
                 .GetExports(controllerType, null, null).SingleOrDefault();
-
+            
             IController result;
 
             if (null != export)
@@ -32,6 +35,7 @@ namespace PhotoAtomic.AspNet.Composition
             else
             {
                 result = base.GetControllerInstance(requestContext, controllerType);
+                if (result == null) return null;
                 _compositionContainer.ComposeParts(result);
             }
 

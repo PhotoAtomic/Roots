@@ -164,6 +164,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\CompositionConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -202,7 +203,9 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\Marvin\Gui\gui.nocache.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\molecule.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -239,6 +242,10 @@
     <ProjectReference Include="..\PhotoAtomic.AspNet.Composition\PhotoAtomic.AspNet.Composition.csproj">
       <Project>{cd5dcd7d-a263-4858-be73-38bb706ec9d5}</Project>
       <Name>PhotoAtomic.AspNet.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Roots.Connectors.Interfaces\Roots.Connectors.Interfaces.csproj">
+      <Project>{343f7721-38c8-459a-88d7-e0f76f21078d}</Project>
+      <Name>Roots.Connectors.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\Roots.Domain\Roots.Domain.csproj">
       <Project>{39372634-7f09-4e21-ad6b-1a8fdc8cf9b3}</Project>

@@ -10,7 +10,7 @@ namespace Roots.FileSystemService
 
         internal FileTracker tracker;
         public string FullPath { get; private set; }
-        public bool IsValid { get; private set; }
+        public bool IsValid { get; private set; }        
         public bool IsDeleted { get;private set;}
         public byte[] Hash { get; private set; }
         
