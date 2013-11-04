@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Roots.Identification
 {
-    public class UserLogin : IUserLogin
+    public class UserLogin //: IUserLogin
     {
         public UserLogin()
         {

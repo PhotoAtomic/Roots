@@ -11,24 +11,17 @@ namespace Roots.Domain
     public class User
     {
         public Guid Id { get; set; }
-        public string UserName { get; set; }
-        public Guid ConfirmationToken { get; set; }
+        public string UserName { get; set; }        
 
         public string LastName { get; set; }
 
         public string FirstName { get; set; }
-
-        public DateTime LastLogInTimeUtc { get; set; }
-
-        public ICollection<Login> Logins { get; set; }
-
-        public ICollection<Role> Roles { get; set; }
+        
+        public ICollection<Login> Logins { get; set; }        
 
         public ICollection<Claim> Claims { get; set; }
 
         public string Secret { get; set; }
-
-        public bool Enabled { get; set; }
 
     }
 }

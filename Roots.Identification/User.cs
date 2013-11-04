@@ -9,7 +9,7 @@ namespace Roots.Identification
 {
     public class User : IUser
     {
-
+        
         public User()
         {
 
@@ -20,6 +20,13 @@ namespace Roots.Identification
             // TODO: Complete member initialization
             UserName = userName;
         }
+
+        public User(Domain.User user)
+        {
+            this.Guid = user.Id;
+            this.UserName = user.UserName;
+        }
+
         public string Id
         {
             get
@@ -44,6 +51,8 @@ namespace Roots.Identification
             get;
             set;
         }
-        
+
+
+        public string PendingPasswordHash { get; set; }
     }
 }

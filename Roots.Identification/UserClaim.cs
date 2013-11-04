@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Roots.Identification
 {
-    public class UserClaim: IUserClaim
+    public class UserClaim //: IUserClaim
     {        
 
         public UserClaim()
