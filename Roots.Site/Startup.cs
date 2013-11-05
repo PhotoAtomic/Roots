@@ -9,6 +9,7 @@ namespace Roots.Site
         public void Configuration(IAppBuilder app)
         {
             ConfigureAuth(app);
+            ConfigureSignalR(app);
         }
     }
 }

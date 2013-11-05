@@ -68,8 +68,8 @@ namespace Roots.FileSystemService
                     var baseUri = new Uri(ConfigurationManager.AppSettings.Get("ServerUri"));
                     //var request = new Uri(baseUri, "Content");
                     client.BaseAddress = baseUri;
-                    HttpResponseMessage response = client.PostAsync("Content", content).Result;
-                
+                    HttpResponseMessage response = client.PostAsync("Content", content).Result;                    
+                    
                 }
             }
 
