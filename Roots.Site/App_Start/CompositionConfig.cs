@@ -1,4 +1,5 @@
 ﻿using PhotoAtomic.AspNet.Composition;
+using Roots.BusinessLogic;
 using Roots.Persistence;
 using Roots.Site.Parts;
 using System;
@@ -42,6 +43,7 @@ namespace Roots.Site
                 .ForType<UnitOfWorkFactoryPart>()
                 .SetCreationPolicy(CreationPolicy.Shared)
                 .ExportInterfaces(x => x.IsPublic);
+             
 
             //registrationBuilder
             //    .ForType<UnitOfWorkFactoryForCachePart>()
@@ -50,8 +52,14 @@ namespace Roots.Site
            
             var aggregateCatalog = new AggregateCatalog();
 
+            var typeCatalog = new TypeCatalog(
+                typeof(DomainSupervisor)
+            );
+
             aggregateCatalog.Catalogs.Add(
                 new AssemblyCatalog(Assembly.GetExecutingAssembly(), registrationBuilder));
+            aggregateCatalog.Catalogs.Add(
+                typeCatalog);
                                     
             MefMvcConfig.RegisterMef(aggregateCatalog);                     
         }

@@ -47,6 +47,10 @@
       <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.0.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.Composition.registration" />
@@ -193,6 +197,7 @@
     <Compile Include="Parts\UnitOfWorkFactoryPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="WebApi\ContentController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -561,6 +566,18 @@
     <ProjectReference Include="..\PhotoAtomic.AspNet.Composition\PhotoAtomic.AspNet.Composition.csproj">
       <Project>{cd5dcd7d-a263-4858-be73-38bb706ec9d5}</Project>
       <Name>PhotoAtomic.AspNet.Composition</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Roots.BusinessLogic\Roots.BusinessLogic.csproj">
+      <Project>{46506cf8-5be9-48f4-a24a-d4a4725db396}</Project>
+      <Name>Roots.BusinessLogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Roots.Connectors.Interfaces\Roots.Connectors.Interfaces.csproj">
+      <Project>{343f7721-38c8-459a-88d7-e0f76f21078d}</Project>
+      <Name>Roots.Connectors.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Roots.Domain\Roots.Domain.csproj">
+      <Project>{39372634-7f09-4e21-ad6b-1a8fdc8cf9b3}</Project>
+      <Name>Roots.Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\Roots.Identification\Roots.Identification.csproj">
       <Project>{7f6f28e8-2ace-4275-b8aa-fc148a924f1b}</Project>

@@ -1,5 +1,8 @@
 ﻿using Microsoft.Owin;
+using Microsoft.Practices.ServiceLocation;
 using Owin;
+using Roots.BusinessLogic;
+using Roots.Site.Hubs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +15,9 @@ namespace Roots.Site
         public static void ConfigureSignalR(IAppBuilder app)
         {
             // Any connection or hub wire up and configuration should go here
-            app.MapSignalR();
+            app.MapSignalR();            
+            var domain = ServiceLocator.Current.GetInstance<DomainSupervisor>();
+            NotificationsHub.WireEvents(domain);
         }
 
     }

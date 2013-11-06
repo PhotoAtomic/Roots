@@ -26,6 +26,22 @@ namespace Roots.FileSystemService
             return await MakeClient().PostAsync(method,content);            
         }
 
+        public async Task<HttpResponseMessage> PutAsync(string method, params object[] contentDto)
+        {
+            HttpContent content = MakeJson(contentDto);
+            return await MakeClient().PutAsync(method, content);
+        }
+
+        public async Task<HttpResponseMessage> GetAsync(string method)
+        {            
+            return await MakeClient().GetAsync(method);
+        }
+
+        public async Task<HttpResponseMessage> DeleteAsync(string method)
+        {            
+            return await MakeClient().DeleteAsync(method);
+        }
+
         private HttpClient MakeClient()
         {
             

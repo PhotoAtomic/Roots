@@ -17,6 +17,7 @@ namespace Roots.FileSystemService
         FileTracker tracker;
         FileSystemEventWatcher eventWatcher;        
         readonly Regex folderFilter = new Regex("directory",RegexOptions.CultureInvariant|RegexOptions.IgnoreCase);
+        readonly WebApiClient client;
 
         public FileSystemWatcherService()
         {
@@ -24,7 +25,8 @@ namespace Roots.FileSystemService
             var folders = ConfigurationManager.AppSettings.GetValues("directory");
 
             tracker = new FileTracker(SendUpdate);
-            eventWatcher = new FileSystemEventWatcher(tracker,folders.First());            
+            eventWatcher = new FileSystemEventWatcher(tracker,folders.First());
+            client = new WebApiClient(new Uri(ConfigurationManager.AppSettings.Get("ServerUri")));
         }
 
         private void SendUpdate(FileTracker tracker)
@@ -51,6 +53,7 @@ namespace Roots.FileSystemService
                     var extension = Path.GetExtension(fileName);
                     if (extension == ".pdf") mimeType = "application/pdf";
                     else if (extension == ".txt") mimeType = "text/plain";
+                    else if (extension == ".jpg" || extension == ".jpeg") mimeType = "image/jpeg";
                     else if (extension == ".sd" || extension == ".mdl" || extension == ".sdf") mimeType = "chemical/x-mdl-sdf";
 
                     var contentDto = new FileContent
@@ -61,15 +64,8 @@ namespace Roots.FileSystemService
                         Content = data,
                     };
 
-                    string json = Newtonsoft.Json.JsonConvert.SerializeObject(contentDto);
-                    HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");                    
-                    HttpClient client = new HttpClient();
-
-                    var baseUri = new Uri(ConfigurationManager.AppSettings.Get("ServerUri"));
-                    //var request = new Uri(baseUri, "Content");
-                    client.BaseAddress = baseUri;
-                    HttpResponseMessage response = client.PostAsync("Content", content).Result;                    
-                    
+                    var result = client.PostAsync("Content", contentDto).Result;
+                   
                 }
             }
 
