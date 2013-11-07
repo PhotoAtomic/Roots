@@ -11,7 +11,7 @@ namespace Roots.FileSystemService
     public class FileLockScope : IDisposable
     {
         FileStream file;
-
+        int retries = 500;
         public FileLockScope(FileStream file)
         {
             this.file = file;
@@ -19,6 +19,7 @@ namespace Roots.FileSystemService
             int waitTime = 1;
             do
             {
+                if (retries <= 0) throw new TimeoutException("Maximum number of retries reached, unable to acquire lock on file");
                 try
                 {
                     file.Lock(0, file.Length);
@@ -29,6 +30,7 @@ namespace Roots.FileSystemService
                     lockAcquired = false;
                     Thread.Sleep(waitTime);
                     waitTime = Math.Min(1000 * 60 * 5, waitTime * 2);
+                    retries--;
                 }
             } while (!lockAcquired);
         }

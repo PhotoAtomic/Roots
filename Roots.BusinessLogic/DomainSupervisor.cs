@@ -15,6 +15,7 @@ namespace Roots.BusinessLogic
         private IUnitOfWorkFactory factory;
 
         private IDictionary<Type, ISet<IMutationEventListener>> mutatorListeners = new Dictionary<Type, ISet<IMutationEventListener>>();
+        private IDictionary<Type, ISet<IExceptionEventListener>> exceptionListeners = new Dictionary<Type, ISet<IExceptionEventListener>>();
 
         [ImportingConstructor]
         public DomainSupervisor([Import]IUnitOfWorkFactory factory)
@@ -32,12 +33,15 @@ namespace Roots.BusinessLogic
                     uow.Commit();
                     NotifyMutatorListeners(mutator);
                 }
-                catch 
+                catch(Exception exception)
                 {
                     uow.Rollback();
+                    NotifyExceptionListeners(exception);
+                    throw exception;
                 }
             }
         }
+
 
 
 
@@ -56,11 +60,23 @@ namespace Roots.BusinessLogic
             AddMutatorListener(mutatorListener);
         }
 
+        public void Apply<TException>(ExceptionEventListener<TException> exceptionListener) where TException : Exception
+        {
+            AddExceptionListener(exceptionListener);
+        }
+
         private void AddMutatorListener<TMutator>(MutationEventListener<TMutator> mutatorListener) where TMutator : Mutator
         {
             var type = typeof(TMutator);
             if (!mutatorListeners.ContainsKey(type)) mutatorListeners[type] = new HashSet<IMutationEventListener>();
             mutatorListeners[type].Add(mutatorListener);
+        }
+
+        private void AddExceptionListener<TException>(ExceptionEventListener<TException> exceptionListener) where TException : Exception
+        {
+            var type = typeof(TException);
+            if (!mutatorListeners.ContainsKey(type)) exceptionListeners[type] = new HashSet<IExceptionEventListener>();
+            exceptionListeners[type].Add(exceptionListener);
         }
 
         private void NotifyMutatorListeners(Mutator mutator)
@@ -71,6 +87,20 @@ namespace Roots.BusinessLogic
             foreach (var listener in listeners)
             {
                 listener.OnMutation(mutator);
+            }
+        }
+
+        private void NotifyExceptionListeners(Exception exception)
+        {
+            var type = exception.GetType();
+            foreach (var key in exceptionListeners.Keys.Where(k => type.IsAssignableFrom(k)))
+            {
+                ISet<IExceptionEventListener> listeners;
+                if (!exceptionListeners.TryGetValue(key, out listeners)) return;
+                foreach (var listener in listeners)
+                {
+                    listener.OnException(exception);
+                }
             }
         }
     }

@@ -567,6 +567,10 @@
       <Project>{cd5dcd7d-a263-4858-be73-38bb706ec9d5}</Project>
       <Name>PhotoAtomic.AspNet.Composition</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PhotoAtomic.SignalR.Composition\PhotoAtomic.SignalR.Composition.csproj">
+      <Project>{29ca053e-b4b2-4524-b569-fcda7511f7fa}</Project>
+      <Name>PhotoAtomic.SignalR.Composition</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Roots.BusinessLogic\Roots.BusinessLogic.csproj">
       <Project>{46506cf8-5be9-48f4-a24a-d4a4725db396}</Project>
       <Name>Roots.BusinessLogic</Name>

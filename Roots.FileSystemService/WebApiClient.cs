@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Roots.FileSystemService
 {
@@ -26,10 +28,35 @@ namespace Roots.FileSystemService
             return await MakeClient().PostAsync(method,content);            
         }
 
-        public async Task<HttpResponseMessage> PutAsync(string method, params object[] contentDto)
+        public async Task<HttpResponseMessage> PutAsync(string method, object requestArgs, params object[] contentDto)
         {
+            var type = requestArgs.GetType();
+            var properties = type.GetProperties();
+            var listOfArgs = Enumerable.Zip(
+                properties.Select(x => x.Name),
+                properties.Select(x => x.GetValue(requestArgs)),
+                (k,v) => new KeyValuePair<string,object>(k,v));
+
+            var stringsOfArgs = listOfArgs
+                .Where(x=>x.Value != null)
+                .Select(x =>
+                    String.Format("{0}={1}", x.Key, HttpUtility.UrlPathEncode(x.Value.ToString())));
+
             HttpContent content = MakeJson(contentDto);
-            return await MakeClient().PutAsync(method, content);
+
+            string queryString;
+            if (stringsOfArgs.Count() > 0)
+            {
+                queryString = string.Format("{0}?{1}", method, string.Join("&", stringsOfArgs));                
+            }
+            else
+            {
+                queryString = method;
+            }
+            
+            
+
+            return await MakeClient().PutAsync(queryString, content);
         }
 
         public async Task<HttpResponseMessage> GetAsync(string method)

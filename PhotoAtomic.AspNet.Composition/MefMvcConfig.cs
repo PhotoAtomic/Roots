@@ -15,7 +15,8 @@ namespace PhotoAtomic.AspNet.Composition
 {
     public static class MefMvcConfig
     {
-        public static void RegisterMef(ComposablePartCatalog typeCatalog)
+       
+        public static CompositionContainer RegisterMef(ComposablePartCatalog typeCatalog)
         {
             var compositionContainer = ConfigureContainer(typeCatalog);
             ServiceLocator
@@ -29,6 +30,8 @@ namespace PhotoAtomic.AspNet.Composition
                 .Configuration
                 .DependencyResolver =
                 new MefMvcDependencyResolver(compositionContainer);
+
+            return compositionContainer;
         }
 
         private static CompositionContainer ConfigureContainer(

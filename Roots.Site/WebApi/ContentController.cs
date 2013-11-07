@@ -4,6 +4,7 @@ using Roots.Connectors.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -46,10 +47,47 @@ namespace Roots.Site.WebApi
             domain.Apply(fileAdded);
         }
 
-        //// PUT api/<controller>/5
-        //public void Put(int id, [FromBody]string value)
-        //{
-        //}
+        // PUT api/<controller>/5
+        public void Put(string id, [FromBody]FileContent value)
+        {
+            var fileUpdated = new ExistingFileUpdated
+            {
+                Name = id,
+                MimeType = value.MimeType,
+                NewName = value.Destination,
+                FileContent = value.Content,
+            };
+            try
+            {
+                domain.Apply(fileUpdated);                
+            }
+            catch (FileNotFoundException)
+            {
+                var fileAdded = new NewFileUploaded
+                {
+                    MimeType = value.MimeType,
+                    Name = value.Destination,
+                    FileContent = value.Content,
+                };
+                domain.Apply(fileAdded);
+            }
+        }
+
+        public void Put(string id, string newName)
+        {
+            var fileUpdated = new ExistingFileRenamed
+            {
+                OldName = id,
+                NewName = newName,
+            };
+            try
+            {
+                domain.Apply(fileUpdated);                
+            }
+            catch (Exception)
+            {                
+            }
+        }
 
         //// DELETE api/<controller>/5
         //public void Delete(int id)

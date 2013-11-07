@@ -25,14 +25,14 @@ namespace Roots.FileSystemService
         public void Renamed(string newFullPath)
         {            
             if (FullPath == newFullPath) return;
-            var oldFullPath = FullPath;
+            OriginalFullPath = FullPath;
             FullPath = newFullPath;
             CheckAndSetValidity();
 
             if (Hash == null) Hash = CalculateHash(FullPath);
 
-            tracker.ChangeName(oldFullPath, newFullPath);
-            tracker.Notify();
+            tracker.ChangeName(OriginalFullPath, newFullPath);
+            tracker.NotifyRenamed(this);
         }
 
         public void Deleted()
@@ -41,14 +41,18 @@ namespace Roots.FileSystemService
             CheckAndSetValidity();
             IsDeleted = true;
             tracker.MarkDeleted(this);
-            tracker.Notify();
+            tracker.NotifyDeleted(this);
         }
 
         public void Created()
         {
-            var newHash = CalculateHash(FullPath);
-            CheckAndSetValidity();
-            tracker.Notify();
+            try
+            {
+                var newHash = CalculateHash(FullPath);
+                CheckAndSetValidity();
+                tracker.NotifyCreated(this);
+            }
+            catch { }
         }
 
         public void Changed()
@@ -57,7 +61,7 @@ namespace Roots.FileSystemService
             if (Hash != null && Hash.SequenceEqual(newHash)) return;
             Hash = newHash;
             CheckAndSetValidity();
-            tracker.Notify();
+            tracker.NotifyChanged(this);
         }
 
         private void CheckAndSetValidity()

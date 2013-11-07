@@ -10,6 +10,9 @@ namespace Roots.Domain
         public Guid Id { get; set; }
         public string Name { get; set; }
         public byte[] Data { get; set; }
-        public string MimeType { get; set; }      
+        public string MimeType { get; set; }
+
+        public DateTime CreateDate { get; set; }
+        public DateTime LastModify { get; set; }
     }
 }

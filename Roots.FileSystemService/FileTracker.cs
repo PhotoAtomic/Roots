@@ -17,12 +17,23 @@ namespace Roots.FileSystemService
 
         private IDictionary<string, Track> tracks;
         private ICollection<Track> deletedFiles;
-        private Action<FileTracker> notificationCallback;
+        private Action<Track> notificationCreatedCallback;
+        private Action<Track> notificationChangedCallback;
+        private Action<Track> notificationRenamedCallback;
+        private Action<Track> notificationDeletedCallback;
         private object synclock = new object();
 
-        public FileTracker(Action<FileTracker> notificationCallback = null)
+        public FileTracker(
+            Action<Track> notificationCreatedCallback = null,
+            Action<Track> notificationChangedCallback = null,
+            Action<Track> notificationRenamedCallback = null,
+            Action<Track> notificationDeletedCallback = null)
         {
-            this.notificationCallback = notificationCallback;
+            this.notificationCreatedCallback = notificationCreatedCallback;
+            this.notificationChangedCallback = notificationChangedCallback;
+            this.notificationRenamedCallback = notificationRenamedCallback;
+            this.notificationDeletedCallback = notificationDeletedCallback;
+
             tracks = new Dictionary<string, Track>();
             deletedFiles = new List<Track>();
         }
@@ -31,7 +42,11 @@ namespace Roots.FileSystemService
         {
             lock (other.synclock)
             {
-                this.notificationCallback = other.notificationCallback;
+                this.notificationCreatedCallback = other.notificationCreatedCallback;
+                this.notificationChangedCallback = other.notificationChangedCallback;
+                this.notificationRenamedCallback = other.notificationRenamedCallback;
+                this.notificationDeletedCallback = other.notificationDeletedCallback;
+
                 tracks = other.tracks;
                 deletedFiles = other.deletedFiles;
                 foreach (var track in tracks.Values)
@@ -75,13 +90,7 @@ namespace Roots.FileSystemService
             tracks.Remove(track.FullPath);
         }
 
-        internal void Notify()
-        {
-            if (notificationCallback != null)
-            {
-                Task.Run(() => notificationCallback(this));
-            }
-        }
+       
 
         public IEnumerable<string> GetModifiedFilesPath()
         {
@@ -91,6 +100,34 @@ namespace Roots.FileSystemService
                 .Select(x=>x.FullPath);
             return modifiedFiles;            
 
+        }
+
+        internal void Notify(Action<Track> action,Track track)
+        {
+            if (action != null)
+            {
+                Task.Run(() => action(track));
+            }
+        }
+
+        internal void NotifyRenamed(Track track)
+        {
+            Notify(notificationRenamedCallback, track);
+        }
+
+        internal void NotifyDeleted(Track track)
+        {
+            Notify(notificationDeletedCallback, track);
+        }
+
+        internal void NotifyCreated(Track track)
+        {
+            Notify(notificationCreatedCallback, track);
+        }
+
+        internal void NotifyChanged(Track track)
+        {
+            Notify(notificationChangedCallback, track);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using PhotoAtomic.AspNet.Composition;
+﻿using Microsoft.AspNet.SignalR;
+using PhotoAtomic.AspNet.Composition;
 using Roots.BusinessLogic;
 using Roots.Persistence;
 using Roots.Site.Parts;
@@ -27,6 +28,9 @@ namespace Roots.Site
                 .SetCreationPolicy(CreationPolicy.NonShared).Export();
 
             registrationBuilder.ForTypesDerivedFrom<ApiController>()
+                .SetCreationPolicy(CreationPolicy.NonShared).Export();
+
+            registrationBuilder.ForTypesDerivedFrom<Hub>()
                 .SetCreationPolicy(CreationPolicy.NonShared).Export();
 
             //registrationBuilder
@@ -61,7 +65,10 @@ namespace Roots.Site
             aggregateCatalog.Catalogs.Add(
                 typeCatalog);
                                     
-            MefMvcConfig.RegisterMef(aggregateCatalog);                     
+
+            var container = MefMvcConfig.RegisterMef(aggregateCatalog);
+            MefSignalRConfig.RegisterMef(container);
+            
         }
     }
 }
