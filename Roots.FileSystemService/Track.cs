@@ -104,5 +104,6 @@ namespace Roots.FileSystemService
 
 
         public string OriginalFullPath { get; private set; }
+
     }
 }

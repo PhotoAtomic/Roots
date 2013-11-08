@@ -8,7 +8,7 @@ namespace Roots.FileSystemService
 {
     public interface ITrack
     {
-        void Renamed(string newFullPath);
+        Task Renamed(string newFullPath);
 
         Task Deleted();
 

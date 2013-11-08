@@ -17,10 +17,11 @@ namespace Roots.FileSystemService
         public void Synchronize(FileTracker tracker, string rootPath)
         {
             var fileListFromDb = client.GetAsync<string[]>("Content", new { path = FileTracker.MakeMachinePath(rootPath)}).Result;
-            var fileListFromFs = Directory.EnumerateFiles(rootPath, "*.*", SearchOption.AllDirectories);
+            var fileListFromFs = Directory.EnumerateFiles(rootPath, "*.*", SearchOption.AllDirectories).Select(x=>FileTracker.MakeMachinePath(x));
             var filesToRemove = fileListFromDb.Except(fileListFromFs);
             var filesToAdd = fileListFromFs.Except(fileListFromDb);
 
+            throw new NotImplementedException("finire di implementare la sincronizzazione: deve tenere conto dei machine path e dei path locali");
 
             foreach (var fileName in filesToRemove)
             {
