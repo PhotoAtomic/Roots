@@ -25,6 +25,12 @@ function HomeController($scope) {
         });
     }
 
+    notifier.client.itemRemoved = function (fileName) {
+        $scope.$apply(function () {            
+            $scope.items = _.without($scope.items, fileName);            
+        });
+    }
+
     $.connection.hub.start();
 }
 

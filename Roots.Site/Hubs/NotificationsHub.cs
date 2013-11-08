@@ -18,6 +18,12 @@ namespace Roots.Site.Hubs
             domain.Apply(new MutationListener<NewFileUploaded>(NotifyNewFileUploaded));
             domain.Apply(new MutationListener<ExistingFileUpdated>(NotifyExistingFileUpdated));
             domain.Apply(new MutationListener<ExistingFileRenamed>(NotifyExistingFileRenamed));
+            domain.Apply(new MutationListener<FileRemoved>(NotifyExistingFileRemoved));
+        }
+
+        private static void NotifyExistingFileRemoved(FileRemoved fileRemoved)
+        {
+            context.Value.Clients.All.itemRemoved(fileRemoved.Name);
         }
 
         private static void NotifyExistingFileRenamed(ExistingFileRenamed fileRenamed)

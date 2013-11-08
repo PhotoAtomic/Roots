@@ -28,40 +28,53 @@ namespace Roots.FileSystemService
             return await MakeClient().PostAsync(method,content);            
         }
 
+        public async Task<HttpResponseMessage> DeleteAsync(string method, object requestArgs)
+        {
+            string queryString = MakeQueryString(method, requestArgs);
+
+            return await MakeClient().DeleteAsync(queryString);
+        }
+
         public async Task<HttpResponseMessage> PutAsync(string method, object requestArgs, params object[] contentDto)
+        {
+            string queryString = MakeQueryString(method, requestArgs);
+
+            HttpContent content = MakeJson(contentDto);
+
+            return await MakeClient().PutAsync(queryString, content);
+        }
+
+        private static string MakeQueryString(string method, object requestArgs)
         {
             var type = requestArgs.GetType();
             var properties = type.GetProperties();
             var listOfArgs = Enumerable.Zip(
                 properties.Select(x => x.Name),
                 properties.Select(x => x.GetValue(requestArgs)),
-                (k,v) => new KeyValuePair<string,object>(k,v));
+                (k, v) => new KeyValuePair<string, object>(k, v));
 
             var stringsOfArgs = listOfArgs
-                .Where(x=>x.Value != null)
+                .Where(x => x.Value != null)
                 .Select(x =>
                     String.Format("{0}={1}", x.Key, HttpUtility.UrlPathEncode(x.Value.ToString())));
-
-            HttpContent content = MakeJson(contentDto);
 
             string queryString;
             if (stringsOfArgs.Count() > 0)
             {
-                queryString = string.Format("{0}?{1}", method, string.Join("&", stringsOfArgs));                
+                queryString = string.Format("{0}?{1}", method, string.Join("&", stringsOfArgs));
             }
             else
             {
                 queryString = method;
             }
-            
-            
-
-            return await MakeClient().PutAsync(queryString, content);
+            return queryString;
         }
 
-        public async Task<HttpResponseMessage> GetAsync(string method)
-        {            
-            return await MakeClient().GetAsync(method);
+        public async Task<T> GetAsync<T>(string method, object requestArgs)
+        {
+            string queryString = MakeQueryString(method, requestArgs);
+            var result =  await MakeClient().GetAsync(queryString);
+            return await MakeObject<T>(result.Content);
         }
 
         public async Task<HttpResponseMessage> DeleteAsync(string method)
@@ -96,6 +109,29 @@ namespace Roots.FileSystemService
 
             HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
             return content;
+        }
+
+        private static async Task<T> MakeObject<T>(HttpContent content)
+        {
+            if (content.Headers.ContentType.MediaType != "application/json") return default(T);
+            //string json;
+            //if (contentDto == null || contentDto.Length == 0)
+            //{
+            //    json = string.Empty;
+            //}
+            //else if (contentDto.Length == 1)
+            //{
+            //    json = Newtonsoft.Json.JsonConvert.SerializeObject(contentDto[0]);
+            //}
+            //else
+            //{
+            //    json = Newtonsoft.Json.JsonConvert.SerializeObject(contentDto);
+            //}
+
+            //HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            //return content;
+            var body = await content.ReadAsStringAsync();
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<T>(body);
         }
         
     }

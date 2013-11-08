@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Roots.FileSystemService
 {
@@ -9,10 +10,10 @@ namespace Roots.FileSystemService
     {
         void Renamed(string newFullPath);
 
-        void Deleted();
-          
-        void Created();
+        Task Deleted();
 
-        void Changed();
+        Task Created();
+
+        Task Changed();
     }
 }

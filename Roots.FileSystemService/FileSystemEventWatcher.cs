@@ -32,7 +32,7 @@ namespace Roots.FileSystemService
             watcher.Changed += watcher_Changed;
             watcher.Created += watcher_Created;
             watcher.Deleted += watcher_Deleted;
-            watcher.Renamed += watcher_Renamed;
+            watcher.Renamed += watcher_Renamed;            
 
             watcher.EnableRaisingEvents = true;
         }
@@ -40,37 +40,69 @@ namespace Roots.FileSystemService
 
         void watcher_Renamed(object sender, RenamedEventArgs e)
         {
-            tracker.Track(e.OldFullPath).Renamed(e.FullPath);           
+            if (IsDirectory(e.FullPath))
+            {
+                tracker.TracksInFolder(e.OldFullPath).Renamed(e.OldFullPath,e.FullPath);
+            }
+            else
+            {
+                tracker.Track(e.OldFullPath).Renamed(e.FullPath);
+            }
         }
 
         void watcher_Deleted(object sender, FileSystemEventArgs e)
         {
-            if (e.ChangeType != WatcherChangeTypes.Deleted) return;
-            tracker.Track(e.FullPath).Deleted();
+            if (e.ChangeType != WatcherChangeTypes.Deleted)
+            {
+                tracker.TracksInFolder(e.FullPath).Deleted();
+            }
+            else
+            {
+                tracker.Track(e.FullPath).Deleted();
+            }
         }
 
         void watcher_Created(object sender, FileSystemEventArgs e)
         {
-            if (e.ChangeType != WatcherChangeTypes.Created) return;
-            tracker.Track(e.FullPath).Created();
+            if (IsDirectory(e.FullPath))
+            {
+                return;
+            }
+            else
+            {
+                if (e.ChangeType != WatcherChangeTypes.Created) return;
+                tracker.Track(e.FullPath).Created();
+            }
         }
 
         void watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            switch (e.ChangeType)
+            if (IsDirectory(e.FullPath))
             {
-                case WatcherChangeTypes.Changed:
-                    tracker.Track(e.FullPath).Changed();
-                    break;
-                case WatcherChangeTypes.Created:
-                    tracker.Track(e.FullPath).Created();
-                    break;
-                case WatcherChangeTypes.Deleted:
-                    tracker.Track(e.FullPath).Deleted();
-                    break;
-                default:
-                    break;
-            }            
+                return;
+            }
+            else
+            {
+                switch (e.ChangeType)
+                {
+                    case WatcherChangeTypes.Changed:
+                        tracker.Track(e.FullPath).Changed();
+                        break;
+                    case WatcherChangeTypes.Created:
+                        tracker.Track(e.FullPath).Created();
+                        break;
+                    case WatcherChangeTypes.Deleted:
+                        tracker.Track(e.FullPath).Deleted();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private bool IsDirectory(string path)
+        {
+            return (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory;
         }
     }
 }

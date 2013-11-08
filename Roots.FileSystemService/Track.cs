@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Roots.FileSystemService
 {
@@ -22,9 +23,9 @@ namespace Roots.FileSystemService
             IsValid = false;
         }
 
-        public void Renamed(string newFullPath)
-        {            
-            if (FullPath == newFullPath) return;
+        public Task Renamed(string newFullPath)
+        {
+            if (FullPath == newFullPath) return Task.FromResult(false) ;
             OriginalFullPath = FullPath;
             FullPath = newFullPath;
             CheckAndSetValidity();
@@ -32,36 +33,36 @@ namespace Roots.FileSystemService
             if (Hash == null) Hash = CalculateHash(FullPath);
 
             tracker.ChangeName(OriginalFullPath, newFullPath);
-            tracker.NotifyRenamed(this);
+            return tracker.NotifyRenamed(this);
         }
 
-        public void Deleted()
+        public Task Deleted()
         {
-            if (IsDeleted) return;            
+            if (IsDeleted) return Task.FromResult(false);            
             CheckAndSetValidity();
             IsDeleted = true;
             tracker.MarkDeleted(this);
-            tracker.NotifyDeleted(this);
+            return tracker.NotifyDeleted(this);
         }
 
-        public void Created()
+        public Task Created()
         {
             try
             {
                 var newHash = CalculateHash(FullPath);
                 CheckAndSetValidity();
-                tracker.NotifyCreated(this);
+                return tracker.NotifyCreated(this);
             }
-            catch { }
+            catch { return Task.FromResult(false); }
         }
 
-        public void Changed()
+        public Task Changed()
         {
             var newHash = CalculateHash(FullPath);
-            if (Hash != null && Hash.SequenceEqual(newHash)) return;
+            if (Hash != null && Hash.SequenceEqual(newHash)) return Task.FromResult(false);
             Hash = newHash;
             CheckAndSetValidity();
-            tracker.NotifyChanged(this);
+            return tracker.NotifyChanged(this);
         }
 
         private void CheckAndSetValidity()

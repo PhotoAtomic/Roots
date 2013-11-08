@@ -12,7 +12,7 @@ using System.Web;
 
 namespace Roots.FileSystemService
 {
-    class FileTracker
+    public class FileTracker
     {
 
         private IDictionary<string, Track> tracks;
@@ -102,32 +102,49 @@ namespace Roots.FileSystemService
 
         }
 
-        internal void Notify(Action<Track> action,Track track)
+        internal Task Notify(Action<Track> action,Track track)
         {
             if (action != null)
             {
-                Task.Run(() => action(track));
+                return Task.Run(() => action(track));
             }
+            return Task.FromResult(false);
         }
 
-        internal void NotifyRenamed(Track track)
+        internal Task NotifyRenamed(Track track)
         {
-            Notify(notificationRenamedCallback, track);
+            return Notify(notificationRenamedCallback, track);
         }
 
-        internal void NotifyDeleted(Track track)
+        internal Task NotifyDeleted(Track track)
         {
-            Notify(notificationDeletedCallback, track);
+            return Notify(notificationDeletedCallback, track);
         }
 
-        internal void NotifyCreated(Track track)
+        internal Task NotifyCreated(Track track)
         {
-            Notify(notificationCreatedCallback, track);
+            return Notify(notificationCreatedCallback, track);
         }
 
-        internal void NotifyChanged(Track track)
+        internal Task NotifyChanged(Track track)
         {
-            Notify(notificationChangedCallback, track);
+            return Notify(notificationChangedCallback, track);
+        }
+
+        internal IEnumerable<Track> TracksInFolder(string path)
+        {
+            return tracks.Where(x => x.Key.StartsWith(path)).Select(x => x.Value);
+        }
+
+        public static string MakeMachinePath(string fileName)
+        {
+            var destination =
+                String.Format(@"\\{0}\{1}",
+                    Environment.MachineName,
+                    fileName
+                        .Replace(Path.GetPathRoot(fileName), string.Empty)
+                        .TrimStart('/', '\\'));
+            return destination;
         }
     }
 }

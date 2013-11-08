@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Roots.BusinessLogic.Selectors
 {
-    public class SelectAllFiles:Selector<IEnumerable<string>>
+    public class SelectAllFiles : Selector<IEnumerable<string>>
     {
         protected override IEnumerable<string> PerformSelection(ReadOnlyRepositoryAccessor repositoryAccessor)
         {

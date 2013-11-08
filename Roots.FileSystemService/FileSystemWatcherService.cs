@@ -24,12 +24,17 @@ namespace Roots.FileSystemService
 
             var folders = ConfigurationManager.AppSettings.GetValues("directory");
 
+            client = new WebApiClient(new Uri(ConfigurationManager.AppSettings.Get("ServerUri")));
+
             tracker = new FileTracker(
                 notificationCreatedCallback: SendCreate,
                 notificationChangedCallback: SendUpdate,
-                notificationRenamedCallback: SendRename);
+                notificationRenamedCallback: SendRename,
+                notificationDeletedCallback: SendDelete);
+
+            new Synchronizer(client).Synchronize(tracker, folders.First());
             eventWatcher = new FileSystemEventWatcher(tracker, folders.First());
-            client = new WebApiClient(new Uri(ConfigurationManager.AppSettings.Get("ServerUri")));
+            
         }
 
         private void SendUpdate(Track track)
@@ -38,16 +43,24 @@ namespace Roots.FileSystemService
 
             var contentDto = PrepareContentDto(fileName);
 
-            var machinePath = MakeMachinePath(fileName);
+            var machinePath = FileTracker.MakeMachinePath(fileName);
 
             var result = client.PutAsync("Content", new { Id = machinePath }, contentDto).Result;
         
         }
 
+
+        private void SendDelete(Track track)
+        {
+            var name = FileTracker.MakeMachinePath(track.FullPath);
+
+            var result = client.DeleteAsync("Content", new { Id = name }).Result;
+        }
+
         private void SendRename(Track track)
         {
-            var oldName = MakeMachinePath(track.OriginalFullPath);
-            var newName = MakeMachinePath(track.FullPath);            
+            var oldName = FileTracker.MakeMachinePath(track.OriginalFullPath);
+            var newName = FileTracker.MakeMachinePath(track.FullPath);            
 
             var result = client.PutAsync("Content", new { Id = oldName, NewName = newName }).Result;
         }
@@ -67,7 +80,7 @@ namespace Roots.FileSystemService
         {
             byte[] data = ReadData(fileName);
 
-            var destination = MakeMachinePath(fileName);
+            var destination = FileTracker.MakeMachinePath(fileName);
 
             string mimeType = GetMimeType(fileName);
 
@@ -79,17 +92,6 @@ namespace Roots.FileSystemService
                 Content = data,
             };
             return contentDto;
-        }
-
-        private static string MakeMachinePath(string fileName)
-        {
-            var destination =
-                String.Format(@"\\{0}\{1}",
-                    Environment.MachineName,
-                    fileName
-                        .Replace(Path.GetPathRoot(fileName), string.Empty)
-                        .TrimStart('/', '\\'));
-            return destination;
         }
 
         private static string GetMimeType(string fileName)
@@ -127,9 +129,6 @@ namespace Roots.FileSystemService
         {
 
         }
-
-
-
         
     }
 }

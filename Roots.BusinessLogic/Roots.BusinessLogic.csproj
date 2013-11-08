@@ -52,12 +52,14 @@
     <Compile Include="Mutators\ExistingFileRenamed.cs" />
     <Compile Include="Mutators\ExistingFileUpdated.cs" />
     <Compile Include="Mutators\FileAlreadyExistsException.cs" />
+    <Compile Include="Mutators\FileRemoved.cs" />
     <Compile Include="Mutators\NewFileUploaded.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryAccessor.cs" />
     <Compile Include="ReadOnlyRepositoryAccessor.cs" />
     <Compile Include="Selector.cs" />
-    <Compile Include="Selectors\Class1.cs" />
+    <Compile Include="Selectors\GetAllFileInSourcePath.cs" />
+    <Compile Include="Selectors\SelectAllFiles.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Roots.Domain\Roots.Domain.csproj">

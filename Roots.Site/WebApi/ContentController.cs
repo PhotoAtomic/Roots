@@ -1,5 +1,6 @@
 ﻿using Roots.BusinessLogic;
 using Roots.BusinessLogic.Mutators;
+using Roots.BusinessLogic.Selectors;
 using Roots.Connectors.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -24,10 +25,15 @@ namespace Roots.Site.WebApi
         }
 
         //// GET api/<controller>
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
+        public IEnumerable<string> Get(string path)
+        {            
+            var fileInSource = new GetAllFileInSourcePath
+            {
+                Path = path,
+            };
+            var files = domain.Apply(fileInSource);
+            return files;
+        }
 
         //// GET api/<controller>/5
         //public string Get(int id)
@@ -89,9 +95,14 @@ namespace Roots.Site.WebApi
             }
         }
 
-        //// DELETE api/<controller>/5
-        //public void Delete(int id)
-        //{
-        //}
+        // DELETE api/<controller>/5
+        public void Delete(string id)
+        {
+            var fileRemoved = new FileRemoved
+            {                
+                Name = id,             
+            };
+            domain.Apply(fileRemoved);
+        }
     }
 }

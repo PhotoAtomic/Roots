@@ -60,9 +60,11 @@
     <Compile Include="FileSystemEventWatcher.cs" />
     <Compile Include="FileSystemWatcherService.cs" />
     <Compile Include="FileTracker.cs" />
+    <Compile Include="FileTrackerExtensions.cs" />
     <Compile Include="ITrack.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Synchronizer.cs" />
     <Compile Include="Track.cs" />
     <Compile Include="WebApiClient.cs" />
   </ItemGroup>
