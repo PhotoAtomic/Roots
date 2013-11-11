@@ -22,10 +22,11 @@ namespace Roots.FileSystemService
             this.serverUri = serverUri;
         }
 
-        public async Task<HttpResponseMessage> PostAsync(string method, params object[] contentDto)
+        public async Task<HttpResponseMessage> PostAsync(string method, object requestArgs, params object[] contentDto)
         {
+            string queryString = MakeQueryString(method, requestArgs);
             HttpContent content = MakeJson(contentDto);
-            return await MakeClient().PostAsync(method,content);            
+            return await MakeClient().PostAsync(queryString, content);            
         }
 
         public async Task<HttpResponseMessage> DeleteAsync(string method, object requestArgs)

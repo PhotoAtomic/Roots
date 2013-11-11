@@ -8,20 +8,24 @@ namespace Roots.BusinessLogic.Mutators
 {
     public class ExistingFileRenamed : Mutator
     {
-        public string OldName { get; set; }
+        public string Source { get; set; }
 
-        public string NewName { get; set; }
+        public string OldSourceName { get; set; }
+
+        public string NewSourceName { get; set; }
 
         public DateTime LastModify { get; set; }
         
         protected override void ApplyMutation(RepositoryAccessor repositoryAccessor)
         {
-            var file = repositoryAccessor.RepositoryOf<Domain.FileContent>().Where(x => x.Name == OldName).SingleOrDefault();
+            if (string.IsNullOrWhiteSpace(Source)) throw new ArgumentException(Source);
+
+            var file = repositoryAccessor.RepositoryOf<Domain.FileContent>().Where(x =>x.Source == Source && x.SorceName == OldSourceName).SingleOrDefault();
             if(file == null){
                 throw new FileNotFoundException("no file to update");
             }
-            file.Name = NewName;            
-            file.LastModify = LastModify;
+            file.SorceName = NewSourceName;            
+            file.LastModify = LastModify;            
         }
     }
 }

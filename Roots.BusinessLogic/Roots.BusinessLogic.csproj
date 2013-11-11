@@ -51,7 +51,7 @@
     <Compile Include="Mutator.cs" />
     <Compile Include="Mutators\ExistingFileRenamed.cs" />
     <Compile Include="Mutators\ExistingFileUpdated.cs" />
-    <Compile Include="Mutators\FileAlreadyExistsException.cs" />
+    <Compile Include="Exceptions\FileAlreadyExistsException.cs" />
     <Compile Include="Mutators\FileRemoved.cs" />
     <Compile Include="Mutators\NewFileUploaded.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -16,29 +16,29 @@ namespace Roots.Site.Hubs
 
         public static void WireEvents(DomainSupervisor domain){
             domain.Apply(new MutationListener<NewFileUploaded>(NotifyNewFileUploaded));
-            domain.Apply(new MutationListener<ExistingFileUpdated>(NotifyExistingFileUpdated));
+            domain.Apply(new MutationListener<ExistingFileContentUpdated>(NotifyExistingFileUpdated));
             domain.Apply(new MutationListener<ExistingFileRenamed>(NotifyExistingFileRenamed));
             domain.Apply(new MutationListener<FileRemoved>(NotifyExistingFileRemoved));
         }
 
         private static void NotifyExistingFileRemoved(FileRemoved fileRemoved)
         {
-            context.Value.Clients.All.itemRemoved(fileRemoved.Name);
+            context.Value.Clients.All.itemRemoved(fileRemoved.SourceName);
         }
 
         private static void NotifyExistingFileRenamed(ExistingFileRenamed fileRenamed)
         {
-            context.Value.Clients.All.itemRenamed(fileRenamed.OldName, fileRenamed.NewName);
+            context.Value.Clients.All.itemRenamed(fileRenamed.OldSourceName, fileRenamed.NewSourceName);
         }
 
-        private static void NotifyExistingFileUpdated(ExistingFileUpdated fileUploaded)
+        private static void NotifyExistingFileUpdated(ExistingFileContentUpdated fileUploaded)
         {
-            context.Value.Clients.All.itemUpdated(fileUploaded.Name);            
+            context.Value.Clients.All.itemUpdated(fileUploaded.SourceName);            
         }
 
         private static void NotifyNewFileUploaded(NewFileUploaded newFileUploaded)
         {
-            context.Value.Clients.All.itemAdded(newFileUploaded.Name);
+            context.Value.Clients.All.itemAdded(newFileUploaded.SourceName);
         }
 
         private DomainSupervisor domain;

@@ -18,11 +18,14 @@ namespace Roots.FileSystemService
         FileSystemEventWatcher eventWatcher;
         readonly Regex folderFilter = new Regex("directory", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
         readonly WebApiClient client;
+        readonly string source;
 
         public FileSystemWatcherService()
         {
 
-            var folders = ConfigurationManager.AppSettings.GetValues("directory");
+            var folders = ConfigurationManager.AppSettings.GetValues("Directory");
+
+            source = ConfigurationManager.AppSettings["SourceIdentifier"];
 
             client = new WebApiClient(new Uri(ConfigurationManager.AppSettings.Get("ServerUri")));
 
@@ -32,7 +35,7 @@ namespace Roots.FileSystemService
                 notificationRenamedCallback: SendRename,
                 notificationDeletedCallback: SendDelete);
 
-            new Synchronizer(client).Synchronize(tracker, folders.First());
+            new Synchronizer(source, client).Synchronize(tracker, folders.First());
             eventWatcher = new FileSystemEventWatcher(tracker, folders.First());
             
         }
@@ -45,7 +48,14 @@ namespace Roots.FileSystemService
 
             var machinePath = FileTracker.MakeMachinePath(fileName);
 
-            var result = client.PutAsync("Content", new { Id = machinePath }, contentDto).Result;
+            var result = client.PutAsync(
+                "Content", 
+                new 
+                {
+                    Source = source, 
+                    Id = machinePath 
+                }, 
+                contentDto).Result;
         
         }
 
@@ -54,7 +64,12 @@ namespace Roots.FileSystemService
         {
             var name = FileTracker.MakeMachinePath(track.FullPath);
 
-            var result = client.DeleteAsync("Content", new { Id = name }).Result;
+            var result = client.DeleteAsync(
+                    "Content", 
+                    new { 
+                        Source = source,
+                        Id = name 
+                    }).Result;
         }
 
         private void SendRename(Track track)
@@ -62,32 +77,43 @@ namespace Roots.FileSystemService
             var oldName = FileTracker.MakeMachinePath(track.OriginalFullPath);
             var newName = FileTracker.MakeMachinePath(track.FullPath);            
 
-            var result = client.PutAsync("Content", new { Id = oldName, NewName = newName }).Result;
+            var result = client.PutAsync(
+                "Content", 
+                new 
+                { 
+                    Source = source,
+                    Id = oldName, 
+                    NewName = newName 
+                }).Result;
         }
 
         private void SendCreate(Track track)
         {
             var fileName = track.FullPath;
-
+            var machinePath = FileTracker.MakeMachinePath(fileName);
             var contentDto = PrepareContentDto(fileName);
 
-            var result = client.PostAsync("Content", contentDto).Result;
+            var result = client.PostAsync(
+                "Content",
+                new
+                {
+                    Source = source,
+                    Id = machinePath,
+                },
+                contentDto
+                ).Result;
 
         }
 
 
         private static FileContent PrepareContentDto(string fileName)
         {
-            byte[] data = ReadData(fileName);
-
-            var destination = FileTracker.MakeMachinePath(fileName);
+            byte[] data = ReadData(fileName);            
 
             string mimeType = GetMimeType(fileName);
 
             var contentDto = new FileContent
             {
-                Source = fileName,
-                Destination = destination,
                 MimeType = mimeType,
                 Content = data,
             };
@@ -115,6 +141,7 @@ namespace Roots.FileSystemService
                 {
                     file.ReadAsync(data, 0, (int)file.Length).Wait();
                 }
+                file.Close();
             }
             return data;
         }

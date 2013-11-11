@@ -42,7 +42,7 @@ namespace Roots.FileSystemService
         {
             if (IsDirectory(e.FullPath))
             {
-                tracker.TracksInFolder(e.OldFullPath).Renamed(e.OldFullPath,e.FullPath);
+                tracker.TracksOnPath(e.OldFullPath).Renamed(e.OldFullPath,e.FullPath);
             }
             else
             {
@@ -51,15 +51,8 @@ namespace Roots.FileSystemService
         }
 
         void watcher_Deleted(object sender, FileSystemEventArgs e)
-        {
-            if (e.ChangeType != WatcherChangeTypes.Deleted)
-            {
-                tracker.TracksInFolder(e.FullPath).Deleted();
-            }
-            else
-            {
-                tracker.Track(e.FullPath).Deleted();
-            }
+        {            
+            tracker.TracksOnPath(e.FullPath).Deleted();            
         }
 
         void watcher_Created(object sender, FileSystemEventArgs e)

@@ -8,13 +8,13 @@ namespace Roots.BusinessLogic.Mutators
 {
     public class FileRemoved : Mutator
     {
-
-        public string Name { get; set; }
+        public string Source { get; set; }
+        public string SourceName { get; set; }
 
         protected override void ApplyMutation(RepositoryAccessor repositoryAccessor)
         {
             var fileRepository = repositoryAccessor.RepositoryOf<Domain.FileContent>();
-            var files = fileRepository.Where(x => x.Name == Name);
+            var files = fileRepository.Where(x =>x.Source == Source && x.SorceName == SourceName);
             foreach (var file in files)
             {
                 fileRepository.Remove(file);

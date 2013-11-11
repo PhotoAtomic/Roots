@@ -131,20 +131,21 @@ namespace Roots.FileSystemService
             return Notify(notificationChangedCallback, track);
         }
 
-        internal IEnumerable<Track> TracksInFolder(string path)
+        internal IEnumerable<Track> TracksOnPath(string path)
         {
             return tracks.Where(x => x.Key.StartsWith(path)).Select(x => x.Value);
         }
 
         public static string MakeMachinePath(string fileName)
         {
-            var destination =
-                String.Format(@"\\{0}\{1}",
-                    Environment.MachineName,
-                    fileName
-                        .Replace(Path.GetPathRoot(fileName), string.Empty)
-                        .TrimStart('/', '\\'));
-            return destination;
+            //var destination =
+            //    String.Format(@"\\{0}\{1}",
+            //        Environment.MachineName,
+            //        fileName
+            //            .Replace(Path.GetPathRoot(fileName), string.Empty)
+            //            .TrimStart('/', '\\'));
+            //return destination;
+            return fileName;
         }
     }
 }

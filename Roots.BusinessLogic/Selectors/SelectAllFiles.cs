@@ -10,7 +10,7 @@ namespace Roots.BusinessLogic.Selectors
     {
         protected override IEnumerable<string> PerformSelection(ReadOnlyRepositoryAccessor repositoryAccessor)
         {
-            return repositoryAccessor.RepositoryOf<Domain.FileContent>().Select(x => x.Name).ToList();
+            return repositoryAccessor.RepositoryOf<Domain.FileContent>().Select(x => x.SorceName).ToList();
         }
     }
 }

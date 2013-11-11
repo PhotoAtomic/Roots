@@ -8,15 +8,15 @@ namespace Roots.BusinessLogic.Selectors
 {
     public class GetAllFileInSourcePath : Selector<IEnumerable<string>>
     {
-
+        public string Source { get; set; }
         public string Path { get; set; }
 
         protected override IEnumerable<string> PerformSelection(ReadOnlyRepositoryAccessor repositoryAccessor)
         {
             var fileRepository = repositoryAccessor.RepositoryOf<Domain.FileContent>();
             return fileRepository
-                .Where(x => x.Name.StartsWith(Path))
-                .Select(x=>x.Name)
+                .Where(x => x.Source == Source && x.SorceName.StartsWith(Path))
+                .Select(x => x.SorceName)
                 .ToList();
         }
 

@@ -24,43 +24,39 @@ namespace Roots.Site.WebApi
             this.domain = domain;
         }
 
-        //// GET api/<controller>
-        public IEnumerable<string> Get(string path)
+        
+        public IEnumerable<string> Get(string source, string path)
         {            
             var fileInSource = new GetAllFileInSourcePath
             {
+                Source = source,
                 Path = path,
             };
             var files = domain.Apply(fileInSource);
             return files;
         }
 
-        //// GET api/<controller>/5
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
 
-        // POST api/<controller>
-        public void Post([FromBody]FileContent value)
+        public void Post(string source, string id, [FromBody]FileContent value)
         {
             var fileAdded = new NewFileUploaded
             {
-                MimeType = value.MimeType,
-                Name = value.Destination,
+                Source = source,
+                SourceName = id,
+                MimeType = value.MimeType,                
                 FileContent = value.Content,
             };
             domain.Apply(fileAdded);
         }
 
-        // PUT api/<controller>/5
-        public void Put(string id, [FromBody]FileContent value)
+        
+        public void Put(string source, string id, [FromBody]FileContent value)
         {
-            var fileUpdated = new ExistingFileUpdated
+            var fileUpdated = new ExistingFileContentUpdated
             {
-                Name = id,
-                MimeType = value.MimeType,
-                NewName = value.Destination,
+                Source = source,
+                SourceName = id,
+                MimeType = value.MimeType,                
                 FileContent = value.Content,
             };
             try
@@ -71,20 +67,22 @@ namespace Roots.Site.WebApi
             {
                 var fileAdded = new NewFileUploaded
                 {
-                    MimeType = value.MimeType,
-                    Name = value.Destination,
+                    Source = source,
+                    SourceName = id,
+                    MimeType = value.MimeType,                    
                     FileContent = value.Content,
                 };
                 domain.Apply(fileAdded);
             }
         }
 
-        public void Put(string id, string newName)
+        public void Put(string source, string id, string newName)
         {
             var fileUpdated = new ExistingFileRenamed
             {
-                OldName = id,
-                NewName = newName,
+                Source  = source,
+                OldSourceName = id,
+                NewSourceName = newName,
             };
             try
             {
@@ -94,13 +92,13 @@ namespace Roots.Site.WebApi
             {                
             }
         }
-
-        // DELETE api/<controller>/5
-        public void Delete(string id)
+        
+        public void Delete(string source, string id)
         {
             var fileRemoved = new FileRemoved
-            {                
-                Name = id,             
+            {     
+                Source = source,
+                SourceName = id,             
             };
             domain.Apply(fileRemoved);
         }
