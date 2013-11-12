@@ -15,5 +15,7 @@ namespace Roots.FileSystemService
         Task Created();
 
         Task Changed();
+
+        void Touch();
     }
 }

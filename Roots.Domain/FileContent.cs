@@ -7,6 +7,8 @@ namespace Roots.Domain
 {
    public class FileContent
     {
+        public bool Approved { get; set; }
+
         public Guid Id { get; set; }
 
         public string Source { get; set; }

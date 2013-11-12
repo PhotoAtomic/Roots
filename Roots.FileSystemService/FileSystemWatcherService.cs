@@ -125,6 +125,7 @@ namespace Roots.FileSystemService
             string mimeType = "application/octet-stream";
             var extension = Path.GetExtension(fileName);
             if (extension == ".pdf") mimeType = "application/pdf";
+            else if (extension == ".placeholder") mimeType = "application/roots-placeholder";
             else if (extension == ".txt") mimeType = "text/plain";
             else if (extension == ".jpg" || extension == ".jpeg") mimeType = "image/jpeg";
             else if (extension == ".sd" || extension == ".mdl" || extension == ".sdf") mimeType = "chemical/x-mdl-sdf";

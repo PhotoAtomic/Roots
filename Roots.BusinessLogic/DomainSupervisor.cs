@@ -49,7 +49,7 @@ namespace Roots.BusinessLogic
         {
             using (var uow = factory.CreateNew(IsolationLevel.ReadItsOwnWrite))
             {
-                var result = selector.Select(new ReadOnlyRepositoryAccessor(uow));
+                var result = selector.Extract(new ReadOnlyRepositoryAccessor(uow));
                 uow.Rollback();
                 return result;
             }

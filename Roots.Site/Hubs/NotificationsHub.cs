@@ -6,7 +6,7 @@ using Microsoft.AspNet.SignalR;
 using Roots.BusinessLogic;
 using Roots.BusinessLogic.Mutators;
 using System.ComponentModel.Composition;
-using Roots.BusinessLogic.Selectors;
+using Roots.BusinessLogic.Extractors;
 
 namespace Roots.Site.Hubs
 {
@@ -15,30 +15,37 @@ namespace Roots.Site.Hubs
         static Lazy<IHubContext> context = new Lazy<IHubContext>(() => GlobalHost.ConnectionManager.GetHubContext<NotificationsHub>());
 
         public static void WireEvents(DomainSupervisor domain){
-            domain.Apply(new MutationListener<NewFileUploaded>(NotifyNewFileUploaded));
+            domain.Apply(new MutationListener<NewFileUploader>(NotifyNewFileUploaded));
             domain.Apply(new MutationListener<ExistingFileContentUpdated>(NotifyExistingFileUpdated));
-            domain.Apply(new MutationListener<ExistingFileRenamed>(NotifyExistingFileRenamed));
-            domain.Apply(new MutationListener<FileRemoved>(NotifyExistingFileRemoved));
+            domain.Apply(new MutationListener<ExistingFileRenamer>(NotifyExistingFileRenamed));
+            domain.Apply(new MutationListener<FileRemover>(NotifyExistingFileRemoved));
         }
 
-        private static void NotifyExistingFileRemoved(FileRemoved fileRemoved)
+        private static void NotifyExistingFileRemoved(FileRemover fileRemoved)
         {
-            context.Value.Clients.All.itemRemoved(fileRemoved.SourceName);
+            context.Value.Clients.All.itemRemoved(fileRemoved.IdOfTheRemovedFiles);
         }
 
-        private static void NotifyExistingFileRenamed(ExistingFileRenamed fileRenamed)
+        private static void NotifyExistingFileRenamed(ExistingFileRenamer fileRenamed)
         {
-            context.Value.Clients.All.itemRenamed(fileRenamed.OldSourceName, fileRenamed.NewSourceName);
+            context.Value.Clients.All.itemRenamed(fileRenamed.IdOfTheRenamedFile, fileRenamed.NewSourceName);
         }
 
         private static void NotifyExistingFileUpdated(ExistingFileContentUpdated fileUploaded)
         {
-            context.Value.Clients.All.itemUpdated(fileUploaded.SourceName);            
+            context.Value.Clients.All.itemUpdated(fileUploaded.IdOfUpdatedFile);            
         }
 
-        private static void NotifyNewFileUploaded(NewFileUploaded newFileUploaded)
+        private static void NotifyNewFileUploaded(NewFileUploader newFileUploaded)
         {
-            context.Value.Clients.All.itemAdded(newFileUploaded.SourceName);
+            var filePreview = new FilePreview
+            {
+                Id = newFileUploaded.IdOfTheNewFile,
+                Name = newFileUploaded.SourceName,
+                MimeType = newFileUploaded.MimeType,
+            };
+            if (newFileUploaded.MimeType == "chemical/x-mdl-sdf") filePreview.Content = newFileUploaded.FileContent;
+            context.Value.Clients.All.itemAdded(filePreview);
         }
 
         private DomainSupervisor domain;
@@ -51,7 +58,7 @@ namespace Roots.Site.Hubs
 
         public override System.Threading.Tasks.Task OnConnected()
         {            
-            Clients.Caller.allItems(domain.Apply(new SelectAllFiles()).ToArray());
+            Clients.Caller.allItems(domain.Apply(new SelectAllApprovedFiles()).ToArray());
             return base.OnConnected();         
         }
        

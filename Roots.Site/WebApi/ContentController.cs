@@ -1,6 +1,6 @@
 ﻿using Roots.BusinessLogic;
 using Roots.BusinessLogic.Mutators;
-using Roots.BusinessLogic.Selectors;
+using Roots.BusinessLogic.Extractors;
 using Roots.Connectors.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -37,16 +37,29 @@ namespace Roots.Site.WebApi
         }
 
 
-        public void Post(string source, string id, [FromBody]FileContent value)
+        public void Post(string source, string id, [FromBody]FileContent value, bool requireApproval = false)
         {
-            var fileAdded = new NewFileUploaded
+            if (!requireApproval)
             {
-                Source = source,
-                SourceName = id,
-                MimeType = value.MimeType,                
-                FileContent = value.Content,
-            };
-            domain.Apply(fileAdded);
+                var fileAdded = new NewFileUploader
+                {
+                    Source = source,
+                    SourceName = id,
+                    MimeType = value.MimeType,
+                    FileContent = value.Content,
+                };
+                domain.Apply(fileAdded);
+            }
+            else
+            {
+                var fileToApprove = new NewFileToApproveUploader
+                {
+                    Source = source,
+                    SourceName = id,
+                    MimeType = value.MimeType,
+                    FileContent = value.Content,
+                };
+            }
         }
 
         
@@ -65,7 +78,7 @@ namespace Roots.Site.WebApi
             }
             catch (FileNotFoundException)
             {
-                var fileAdded = new NewFileUploaded
+                var fileAdded = new NewFileUploader
                 {
                     Source = source,
                     SourceName = id,
@@ -78,7 +91,7 @@ namespace Roots.Site.WebApi
 
         public void Put(string source, string id, string newName)
         {
-            var fileUpdated = new ExistingFileRenamed
+            var fileUpdated = new ExistingFileRenamer
             {
                 Source  = source,
                 OldSourceName = id,
@@ -95,7 +108,7 @@ namespace Roots.Site.WebApi
         
         public void Delete(string source, string id)
         {
-            var fileRemoved = new FileRemoved
+            var fileRemoved = new FileRemover
             {     
                 Source = source,
                 SourceName = id,             

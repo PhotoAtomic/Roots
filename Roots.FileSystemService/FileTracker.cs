@@ -138,13 +138,6 @@ namespace Roots.FileSystemService
 
         public static string MakeMachinePath(string fileName)
         {
-            //var destination =
-            //    String.Format(@"\\{0}\{1}",
-            //        Environment.MachineName,
-            //        fileName
-            //            .Replace(Path.GetPathRoot(fileName), string.Empty)
-            //            .TrimStart('/', '\\'));
-            //return destination;
             return fileName;
         }
     }

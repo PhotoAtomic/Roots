@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DomainSupervisor.cs" />
+    <Compile Include="Extractors\FilePreview.cs" />
     <Compile Include="IExceptionEventListener.cs" />
     <Compile Include="ExceptionEventListener.cs" />
     <Compile Include="MutationEventListener.cs" />
@@ -49,17 +50,18 @@
     <Compile Include="MutationListener.cs" />
     <Compile Include="MutatorAlreadyAppliedException.cs" />
     <Compile Include="Mutator.cs" />
-    <Compile Include="Mutators\ExistingFileRenamed.cs" />
-    <Compile Include="Mutators\ExistingFileUpdated.cs" />
+    <Compile Include="Mutators\ExistingFileRenamer.cs" />
+    <Compile Include="Mutators\ExistingFileUpdater.cs" />
     <Compile Include="Exceptions\FileAlreadyExistsException.cs" />
-    <Compile Include="Mutators\FileRemoved.cs" />
-    <Compile Include="Mutators\NewFileUploaded.cs" />
+    <Compile Include="Mutators\FileRemover.cs" />
+    <Compile Include="Mutators\NewFileToApproveUploader.cs" />
+    <Compile Include="Mutators\NewFileUploader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepositoryAccessor.cs" />
     <Compile Include="ReadOnlyRepositoryAccessor.cs" />
     <Compile Include="Selector.cs" />
-    <Compile Include="Selectors\GetAllFileInSourcePath.cs" />
-    <Compile Include="Selectors\SelectAllFiles.cs" />
+    <Compile Include="Extractors\GetAllFileInSourcePath.cs" />
+    <Compile Include="Extractors\SelectAllApprovedFiles.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Roots.Domain\Roots.Domain.csproj">

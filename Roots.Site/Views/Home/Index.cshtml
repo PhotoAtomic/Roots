@@ -2,7 +2,8 @@
     ViewBag.Title = "Home Page";
 }
 @section scripts{
-    @Scripts.Render("~/bundles/angularjs","~/signalr/hubs", "~/scripts/controllers/home.js")        
+    @Scripts.Render("~/bundles/angularjs", "~/signalr/hubs", "~/scripts/controllers/home.js")        
+    @Scripts.Render("/Scripts/marvin4js/gui/gui.nocache.js"); 
 }
 
 <div class="jumbotron">
@@ -16,7 +17,8 @@
 <div ng-app ng-controller="HomeController">
     <ul>
         <li ng-repeat="item in items">
-            <span>{{item}}</span>
+            <img src="{{item.image}}" /> 
+            <span>{{item.Name}}</span>
         </li>
     </ul>
 </div>

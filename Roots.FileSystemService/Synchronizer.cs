@@ -33,6 +33,10 @@ namespace Roots.FileSystemService
             {
                 tracker.Track(fileName).Created().Wait();
             }
+            foreach (var fileName in fileListFromFs)
+            {
+                tracker.Track(fileName).Touch();
+            }
         }
     }
 }

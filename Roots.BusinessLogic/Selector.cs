@@ -7,11 +7,11 @@ namespace Roots.BusinessLogic
 {
     public abstract class Selector<T>
     {
-        protected internal T Select(ReadOnlyRepositoryAccessor repositoryAccessor)
+        protected internal T Extract(ReadOnlyRepositoryAccessor repositoryAccessor)
         {
-            return PerformSelection(repositoryAccessor);
+            return PerformExtraction(repositoryAccessor);
         }
 
-        protected abstract T PerformSelection(ReadOnlyRepositoryAccessor repositoryAccessor);
+        protected abstract T PerformExtraction(ReadOnlyRepositoryAccessor repositoryAccessor);
     }
 }

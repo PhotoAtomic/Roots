@@ -27,7 +27,7 @@ namespace Roots.FileSystemService
         {
             if (FullPath == newFullPath) return Task.FromResult(false) ;
             OriginalFullPath = FullPath;
-            FullPath = newFullPath;
+            FullPath = newFullPath;            
             CheckAndSetValidity();
 
             if (Hash == null) Hash = CalculateHash(FullPath);
@@ -105,5 +105,11 @@ namespace Roots.FileSystemService
 
         public string OriginalFullPath { get; private set; }
 
+
+
+        public void Touch()
+        {
+            CheckAndSetValidity();
+        }
     }
 }
