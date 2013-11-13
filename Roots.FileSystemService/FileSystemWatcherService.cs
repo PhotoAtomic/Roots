@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Roots.Connectors.Interfaces;
 using System.Text;
+using Roots.SupportedFileTypes;
 
 namespace Roots.FileSystemService
 {
@@ -122,13 +123,8 @@ namespace Roots.FileSystemService
 
         private static string GetMimeType(string fileName)
         {
-            string mimeType = "application/octet-stream";
             var extension = Path.GetExtension(fileName);
-            if (extension == ".pdf") mimeType = "application/pdf";
-            else if (extension == ".placeholder") mimeType = "application/roots-placeholder";
-            else if (extension == ".txt") mimeType = "text/plain";
-            else if (extension == ".jpg" || extension == ".jpeg") mimeType = "image/jpeg";
-            else if (extension == ".sd" || extension == ".mdl" || extension == ".sdf") mimeType = "chemical/x-mdl-sdf";
+            string mimeType = MimeTypes.GetFileType(extension) ?? MimeTypes.OctetStream;
             return mimeType;
         }
 

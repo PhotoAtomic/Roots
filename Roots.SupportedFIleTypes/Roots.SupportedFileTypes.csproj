@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B03388C3-D44B-4BC0-B509-B188CF1219C8}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{F7BF27B7-89A0-4C2A-84EE-2455EAA1BECE}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Roots.FileSystemService</RootNamespace>
-    <AssemblyName>Roots.FileSystemService</AssemblyName>
+    <RootNamespace>Roots.SupportedFileTypes</RootNamespace>
+    <AssemblyName>Roots.SupportedFileTypes</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -32,55 +29,19 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Baki">
-      <HintPath>..\packages\Baki.0.2.0.36475\lib\net40\Baki.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileLockScope.cs" />
-    <Compile Include="FileStreamExtensions.cs" />
-    <Compile Include="FileSystemEventWatcher.cs" />
-    <Compile Include="FileSystemWatcherService.cs" />
-    <Compile Include="FileTracker.cs" />
-    <Compile Include="FileTrackerExtensions.cs" />
-    <Compile Include="ITrack.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="FileType.cs" />
+    <Compile Include="MimeTypes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Synchronizer.cs" />
-    <Compile Include="Track.cs" />
-    <Compile Include="WebApiClient.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Roots.Connectors.Interfaces\Roots.Connectors.Interfaces.csproj">
-      <Project>{343f7721-38c8-459a-88d7-e0f76f21078d}</Project>
-      <Name>Roots.Connectors.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Roots.SupportedFIleTypes\Roots.SupportedFileTypes.csproj">
-      <Project>{f7bf27b7-89a0-4c2a-84ee-2455eaa1bece}</Project>
-      <Name>Roots.SupportedFileTypes</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

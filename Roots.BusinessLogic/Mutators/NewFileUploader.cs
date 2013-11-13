@@ -34,6 +34,7 @@ namespace Roots.BusinessLogic.Mutators
                 CreateDate = CreateDate,
                 LastModify = CreateDate,
             };
+            if(files.Any(x=>x.Source == Source && x.SorceName == SourceName)) throw new FileAlreadyExistsException();
             files.Add(newFile);
             IdOfTheNewFile = newFile.Id;
         }

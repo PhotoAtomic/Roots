@@ -34,9 +34,21 @@ function HomeController($scope) {
             $scope.items = $linq($scope.items).where(function (x) { return x.Id != id}).toArray();
         });
     }
+
+
+    notifier.client.itemUpdated = function (item) {
+        $scope.$apply(function () {
+            var itemToUpdate = $linq($scope.items).single(function (x) { return x.Id == item.Id });
+            itemToUpdate.Content = item.Content;
+            itemToUpdate.MimeType = item.MimeType;
+            $scope.Fill(itemToUpdate);
+        });
+    }
+
+
     $scope.Fill = function (item) {
-        if (item.MimeType == "chemical/x-mdl-sdf") {
-            var moleculeText = atob(item.Content);//ToString(item.Content.split(""));
+        if (item.MimeType == MimeTypes.Chemical ) {
+            var moleculeText = atob(item.Content);
             marvin.onReady(function () {
                 var imgData = marvin.ImageExporter.molToDataUrl(moleculeText);
                 item.image = imgData;
@@ -47,9 +59,4 @@ function HomeController($scope) {
     $.connection.hub.start();
 
     
-}
-
-
-function ToString(array) {
-    return String.fromCharCode.apply(String, array);
 }

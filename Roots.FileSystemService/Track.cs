@@ -49,7 +49,7 @@ namespace Roots.FileSystemService
         {
             try
             {
-                var newHash = CalculateHash(FullPath);
+                Hash = CalculateHash(FullPath);
                 CheckAndSetValidity();
                 return tracker.NotifyCreated(this);
             }

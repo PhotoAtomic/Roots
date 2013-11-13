@@ -188,6 +188,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\GeneratedController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -206,6 +207,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\aptuitlogo.png" />
     <Content Include="Scripts\angular-bootstrap-prettify.js" />
     <Content Include="Scripts\angular-bootstrap-prettify.min.js" />
     <Content Include="Scripts\angular-bootstrap.js" />
@@ -738,6 +740,7 @@
     <Content Include="Views\Account\Manage.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Generated\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -781,6 +784,10 @@
     <ProjectReference Include="..\Roots.Persistence\Roots.Persistence.csproj">
       <Project>{7a3c939b-c748-48ec-ba1f-30c338aa44eb}</Project>
       <Name>Roots.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Roots.SupportedFIleTypes\Roots.SupportedFileTypes.csproj">
+      <Project>{f7bf27b7-89a0-4c2a-84ee-2455eaa1bece}</Project>
+      <Name>Roots.SupportedFileTypes</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

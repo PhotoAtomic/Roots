@@ -1,0 +1,8 @@
+﻿@model IEnumerable<KeyValuePair<string,string>>
+
+MimeTypes = 
+{
+
+    @Html.Raw(string.Join(",", Model.Select(x => String.Format("{0}:\"{1}\"", x.Key, x.Value))))
+    
+};

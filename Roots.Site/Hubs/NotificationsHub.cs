@@ -7,6 +7,9 @@ using Roots.BusinessLogic;
 using Roots.BusinessLogic.Mutators;
 using System.ComponentModel.Composition;
 using Roots.BusinessLogic.Extractors;
+using System.IO;
+using Roots.Domain;
+using Roots.SupportedFileTypes;
 
 namespace Roots.Site.Hubs
 {
@@ -28,12 +31,19 @@ namespace Roots.Site.Hubs
 
         private static void NotifyExistingFileRenamed(ExistingFileRenamer fileRenamed)
         {
-            context.Value.Clients.All.itemRenamed(fileRenamed.IdOfTheRenamedFile, fileRenamed.NewSourceName);
+            context.Value.Clients.All.itemRenamed(fileRenamed.IdOfTheRenamedFile, Path.GetFileNameWithoutExtension(fileRenamed.NewSourceName));
         }
 
         private static void NotifyExistingFileUpdated(ExistingFileContentUpdated fileUploaded)
         {
-            context.Value.Clients.All.itemUpdated(fileUploaded.IdOfUpdatedFile);            
+            var filePreview = new FilePreview
+            {
+                Id = fileUploaded.IdOfUpdatedFile,
+                Name = Path.GetFileNameWithoutExtension(fileUploaded.SourceName),
+                MimeType = fileUploaded.MimeType,
+            };
+            if (fileUploaded.MimeType == MimeTypes.Chemical) filePreview.Content = fileUploaded.FileContent;
+            context.Value.Clients.All.itemUpdated(filePreview);            
         }
 
         private static void NotifyNewFileUploaded(NewFileUploader newFileUploaded)
@@ -41,10 +51,10 @@ namespace Roots.Site.Hubs
             var filePreview = new FilePreview
             {
                 Id = newFileUploaded.IdOfTheNewFile,
-                Name = newFileUploaded.SourceName,
+                Name = Path.GetFileNameWithoutExtension(newFileUploaded.SourceName),
                 MimeType = newFileUploaded.MimeType,
             };
-            if (newFileUploaded.MimeType == "chemical/x-mdl-sdf") filePreview.Content = newFileUploaded.FileContent;
+            if (newFileUploaded.MimeType == MimeTypes.Chemical) filePreview.Content = newFileUploaded.FileContent;
             context.Value.Clients.All.itemAdded(filePreview);
         }
 
@@ -57,8 +67,16 @@ namespace Roots.Site.Hubs
         }
 
         public override System.Threading.Tasks.Task OnConnected()
-        {            
-            Clients.Caller.allItems(domain.Apply(new SelectAllApprovedFiles()).ToArray());
+        {
+            var files = domain.Apply(new SelectAllApprovedFiles()).Select(x =>
+                new FilePreview
+                {
+                    Id = x.Id,
+                    Name = Path.GetFileNameWithoutExtension(x.SorceName),
+                    MimeType = x.MimeType,
+                    Content = (x.MimeType == MimeTypes.Chemical)? x.Data : null,
+                });
+            Clients.Caller.allItems(files);
             return base.OnConnected();         
         }
        
