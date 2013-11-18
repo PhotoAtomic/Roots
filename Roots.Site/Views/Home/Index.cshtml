@@ -2,8 +2,10 @@
     ViewBag.Title = "Home Page";
 }
 @section scripts{
-    @Scripts.Render("~/bundles/angularjs", "~/signalr/hubs", "~/Generated/Index", "~/scripts/controllers/home.js")
+    @Scripts.Render("~/bundles/angularjs", "~/signalr/hubs", "~/Generated/Index", "~/bundles/treeview", "~/scripts/controllers/home.js")
     @Scripts.Render("/Scripts/marvin4js/gui/gui.nocache.js")
+    @Styles.Render("/bundles/treeviewcs")
+    
 }
 
 <div class="jumbotron">
@@ -15,11 +17,16 @@
 
 
 
-<div class="container" ng-app ng-controller="HomeController">
+<div class="container" ng-app="angularTreeview" ng-controller="HomeController">
     <div class="row">
         <div class="col-md-2">
-            <div class="affix">
-                Browser
+            <div class="affix"
+                 data-angular-treeview="true"
+                 data-tree-id="tree"
+                 data-tree-model="browser"
+                 data-node-id="id"
+                 data-node-label="label"
+                 data-node-children="children">
             </div>
         </div>
         <div class="col-md-10">
@@ -34,7 +41,7 @@
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody ng-cloak>
                     <tr ng-repeat="item in items">
                         <td class="col-lg-2">
                             <img class="img-thumbnail" ng-src="{{item.image}}" ng-show="item.image != null" />

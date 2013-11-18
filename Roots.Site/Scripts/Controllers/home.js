@@ -2,7 +2,24 @@
 
 function HomeController($scope) {
     
-    $scope.items = [];   
+    $scope.items = [];
+
+    $scope.browser = [{
+        id : "a1",
+        label : "title",
+        children: [
+            {
+                id: "a2",
+                label: "title 2",
+                children: []
+            },
+            {
+                id: "a3",
+                label: "title 3",
+                children: []
+            },
+        ]
+    }];
 
     var notifier = $.connection.notificationsHub;
 
