@@ -17,7 +17,7 @@ namespace Roots.SupportedFileTypes
 
         public static FileType GetFileType(string extension)
         {
-            return GetAllFileTypes().First(x => x.MatchExtension(extension));
+            return GetAllFileTypes().FirstOrDefault(x => x.MatchExtension(extension));
         }
 
         public static IEnumerable<FileType> GetAllFileTypes()
