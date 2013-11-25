@@ -37,7 +37,7 @@ namespace Roots.Site.WebApi
             response.Content = new ByteArrayContent(file.Data);
             response.Content.Headers.ContentType = new MediaTypeHeaderValue(file.MimeType);
             response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-            response.Content.Headers.ContentDisposition.FileName = Path.GetFileName(file.SourceName??);
+            response.Content.Headers.ContentDisposition.FileName = Path.GetFileName(file.SourceName);
             response.Content.Headers.ContentDisposition.FileNameStar = Path.GetFileName(file.SourceName);            
             return response;
         }
