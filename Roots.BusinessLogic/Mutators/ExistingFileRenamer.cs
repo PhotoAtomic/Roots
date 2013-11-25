@@ -22,12 +22,12 @@ namespace Roots.BusinessLogic.Mutators
         {
             if (string.IsNullOrWhiteSpace(Source)) throw new ArgumentException(Source);
 
-            var file = repositoryAccessor.RepositoryOf<Domain.FileContent>().Where(x =>x.Source == Source && x.SorceName == OldSourceName).SingleOrDefault();
+            var file = repositoryAccessor.RepositoryOf<Domain.FileContent>().Where(x =>x.Source == Source && x.SourceName == OldSourceName).SingleOrDefault();
             if(file == null){
                 throw new FileNotFoundException("no file to update");
             }
             IdOfTheRenamedFile = file.Id;
-            file.SorceName = NewSourceName;            
+            file.SourceName = NewSourceName;            
             file.LastModify = LastModify;            
         }
     }

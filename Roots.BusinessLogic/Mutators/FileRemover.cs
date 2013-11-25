@@ -15,7 +15,7 @@ namespace Roots.BusinessLogic.Mutators
         protected override void ApplyMutation(RepositoryAccessor repositoryAccessor)
         {
             var fileRepository = repositoryAccessor.RepositoryOf<Domain.FileContent>();
-            var file = fileRepository.Where(x =>x.Source == Source && x.SorceName == SourceName).SingleOrDefault();
+            var file = fileRepository.Where(x =>x.Source == Source && x.SourceName == SourceName).SingleOrDefault();
             IdOfTheRemovedFiles = file.Id;
             fileRepository.Remove(file);
         }

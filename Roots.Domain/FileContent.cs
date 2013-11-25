@@ -12,7 +12,7 @@ namespace Roots.Domain
         public Guid Id { get; set; }
 
         public string Source { get; set; }
-        public string SorceName { get; set; }
+        public string SourceName { get; set; }
 
         public byte[] Data { get; set; }
         public string MimeType { get; set; }       

@@ -1,6 +1,6 @@
 ﻿
 
-function HomeController($scope) {
+function HomeController($scope, $http) {
     
     $scope.items = [];
 
@@ -27,7 +27,7 @@ function HomeController($scope) {
         $scope.$apply(function () {
             $scope.items = fileItems;
             $.each($scope.items, function () {
-                $scope.Fill(this);
+                $scope.Fill(this,$http);
             });
         });
     }
@@ -35,7 +35,7 @@ function HomeController($scope) {
     notifier.client.itemAdded = function (item) {
         $scope.$apply(function () {
             $scope.items.push(item);
-            $scope.Fill(item);
+            $scope.Fill(item,$http);
         });
     }
 
@@ -58,18 +58,23 @@ function HomeController($scope) {
             var itemToUpdate = $linq($scope.items).single(function (x) { return x.Id == item.Id });
             itemToUpdate.Content = item.Content;
             itemToUpdate.MimeType = item.MimeType;
-            $scope.Fill(itemToUpdate);
+            $scope.Fill(itemToUpdate,$http);
         });
     }
 
 
-    $scope.Fill = function (item) {
-        if (item.MimeType == MimeTypes.Chemical ) {
-            var moleculeText = atob(item.Content);
+    $scope.Fill = function (item,$http) {
+        if (item.MimeType == MimeTypes.Chemical ) {            
             marvin.onReady(function () {
-                var imgData = marvin.ImageExporter.molToDataUrl(moleculeText);
-                item.image = imgData;
+                $http({ method: "GET", url: "/api/preview/" + item.Id })
+                .success(function (data, status, headers, config) {                    
+                    var imgData = marvin.ImageExporter.molToDataUrl(data);
+                    item.image = imgData;
+                });                
             });
+        }
+        else if (item.MimeType == MimeTypes.ImageJPG) {
+            item.image = "/api/preview/" + item.Id + "/?w=192&h=192";
         }
     };
 

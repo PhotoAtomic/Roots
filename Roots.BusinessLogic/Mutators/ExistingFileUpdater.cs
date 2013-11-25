@@ -28,7 +28,7 @@ namespace Roots.BusinessLogic.Mutators
 
             if (MimeType == null || FileContent == null) return;
 
-            var file = repositoryAccessor.RepositoryOf<Domain.FileContent>().Where(x => x.Source == Source && x.SorceName == SourceName).SingleOrDefault();
+            var file = repositoryAccessor.RepositoryOf<Domain.FileContent>().Where(x => x.Source == Source && x.SourceName == SourceName).SingleOrDefault();
             if (file == null)
             {
                 throw new FileNotFoundException("no file to update");

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Net.Http.Headers;
 
 namespace Roots.Site.WebApi
 {
@@ -24,6 +25,22 @@ namespace Roots.Site.WebApi
             this.domain = domain;
         }
 
+        public HttpResponseMessage Get(Guid id)
+        {
+            var getFile = new GetFileContent { Id = id };
+            var file = domain.Apply(getFile);
+
+            if (file == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+
+            var response = new HttpResponseMessage(HttpStatusCode.OK);
+
+            response.Content = new ByteArrayContent(file.Data);
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue(file.MimeType);
+            response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+            response.Content.Headers.ContentDisposition.FileName = Path.GetFileName(file.SourceName??);
+            response.Content.Headers.ContentDisposition.FileNameStar = Path.GetFileName(file.SourceName);            
+            return response;
+        }
         
         public IEnumerable<string> Get(string source, string path)
         {            

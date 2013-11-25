@@ -15,9 +15,9 @@ namespace Roots.BusinessLogic
             this.uow = uow;
         }
 
-        public IQueryable<T> RepositoryOf<T>()
+        public IGettableQueryable<T> RepositoryOf<T>()
         {
-            return uow.RepositoryOf<T>();
+            return new GettableRepositoryWrapper<T>(uow.RepositoryOf<T>());
         }
     }
 }

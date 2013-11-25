@@ -21,14 +21,14 @@ namespace Roots.BusinessLogic.Mutators
         {
             if (string.IsNullOrWhiteSpace(Source)) throw new ArgumentException(Source);
             CreateDate = DateTime.UtcNow;
-            if (repositoryAccessor.RepositoryOf<Domain.FileContent>().Any(x => x.Source == Source && x.SorceName == SourceName)) throw new FileAlreadyExistsException();
+            if (repositoryAccessor.RepositoryOf<Domain.FileContent>().Any(x => x.Source == Source && x.SourceName == SourceName)) throw new FileAlreadyExistsException();
             var files = repositoryAccessor.RepositoryOf<Domain.FileContent>();
             files.Add(new Domain.FileContent
             {
                 Approved = false,
                 Data = FileContent,
                 Source = Source,
-                SorceName = SourceName,
+                SourceName = SourceName,
                 MimeType = MimeType,
                 CreateDate = CreateDate,
                 LastModify = CreateDate,

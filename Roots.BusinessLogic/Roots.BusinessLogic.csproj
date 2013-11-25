@@ -42,8 +42,11 @@
   <ItemGroup>
     <Compile Include="DomainSupervisor.cs" />
     <Compile Include="Extractors\FilePreview.cs" />
+    <Compile Include="Extractors\GetItemContent.cs" />
+    <Compile Include="GettableRepositoryWrapper.cs" />
     <Compile Include="IExceptionEventListener.cs" />
     <Compile Include="ExceptionEventListener.cs" />
+    <Compile Include="IGettableQueryable%27T.cs" />
     <Compile Include="MutationEventListener.cs" />
     <Compile Include="IMutationEventListener.cs" />
     <Compile Include="ExceptionListener.cs" />

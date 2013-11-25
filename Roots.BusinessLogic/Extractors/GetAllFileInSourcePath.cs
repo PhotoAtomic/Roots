@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Roots.BusinessLogic.Extractors
 {
-    public class GetAllFileInSourcePath : Selector<IEnumerable<string>>
+    public class GetAllFileInSourcePath : Extractor<IEnumerable<string>>
     {
         public string Source { get; set; }
         public string Path { get; set; }
@@ -15,8 +15,8 @@ namespace Roots.BusinessLogic.Extractors
         {
             var fileRepository = repositoryAccessor.RepositoryOf<Domain.FileContent>();
             return fileRepository
-                .Where(x => x.Source == Source && x.SorceName.StartsWith(Path))
-                .Select(x => x.SorceName)
+                .Where(x => x.Source == Source && x.SourceName.StartsWith(Path))
+                .Select(x => x.SourceName)
                 .ToList();
         }
 

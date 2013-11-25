@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Roots.BusinessLogic.Extractors
 {
-    public class SelectAllApprovedFiles : Selector<IEnumerable<FileContent>>
+    public class SelectAllApprovedFiles : Extractor<IEnumerable<FileContent>>
     {
         protected override IEnumerable<FileContent> PerformExtraction(ReadOnlyRepositoryAccessor repositoryAccessor)
         {

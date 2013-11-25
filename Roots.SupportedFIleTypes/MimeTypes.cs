@@ -12,7 +12,7 @@ namespace Roots.SupportedFileTypes
         public static readonly FileType RootsPlaceholder = new FileType("application/roots-placeholder",".placeholder");
         public static readonly FileType Chemical = new FileType("chemical/x-mdl-sdf", ".mdl", ".sd",".sdf");
         public static readonly FileType PDF = new FileType("application/pdf",".pdf");
-        public static readonly FileType PainText = new FileType("text/plain",".txt");
+        public static readonly FileType PlainText = new FileType("text/plain",".txt");
         public static readonly FileType ImageJPG = new FileType("image/jpeg",".jpg",".jpeg");
 
         public static FileType GetFileType(string extension)

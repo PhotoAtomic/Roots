@@ -40,6 +40,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ImageResizer">
+      <HintPath>..\packages\ImageResizer.3.4.1\lib\ImageResizer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.0.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
@@ -199,6 +202,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="WebApi\ContentController.cs" />
+    <Compile Include="WebApi\PreviewController.cs" />
     <Compile Include="WebApi\UploadController.cs" />
   </ItemGroup>
   <ItemGroup>

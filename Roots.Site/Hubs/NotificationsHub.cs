@@ -42,7 +42,7 @@ namespace Roots.Site.Hubs
                 Name = Path.GetFileNameWithoutExtension(fileUploaded.SourceName),
                 MimeType = fileUploaded.MimeType,
             };
-            if (fileUploaded.MimeType == MimeTypes.Chemical) filePreview.Content = fileUploaded.FileContent;
+           // if (fileUploaded.MimeType == MimeTypes.Chemical) filePreview.Content = fileUploaded.FileContent;
             context.Value.Clients.All.itemUpdated(filePreview);            
         }
 
@@ -54,7 +54,7 @@ namespace Roots.Site.Hubs
                 Name = Path.GetFileNameWithoutExtension(newFileUploaded.SourceName),
                 MimeType = newFileUploaded.MimeType,
             };
-            if (newFileUploaded.MimeType == MimeTypes.Chemical) filePreview.Content = newFileUploaded.FileContent;
+            //if (newFileUploaded.MimeType == MimeTypes.Chemical) filePreview.Content = newFileUploaded.FileContent;
             context.Value.Clients.All.itemAdded(filePreview);
         }
 
@@ -72,9 +72,9 @@ namespace Roots.Site.Hubs
                 new FilePreview
                 {
                     Id = x.Id,
-                    Name = Path.GetFileNameWithoutExtension(x.SorceName),
+                    Name = Path.GetFileNameWithoutExtension(x.SourceName),
                     MimeType = x.MimeType,
-                    Content = (x.MimeType == MimeTypes.Chemical)? x.Data : null,
+                    //Content = (x.MimeType == MimeTypes.Chemical)? x.Data : null,
                 });
             Clients.Caller.allItems(files);
             return base.OnConnected();         

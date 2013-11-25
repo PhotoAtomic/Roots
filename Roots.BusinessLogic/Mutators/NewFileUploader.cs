@@ -22,19 +22,19 @@ namespace Roots.BusinessLogic.Mutators
         {
             if (string.IsNullOrWhiteSpace(Source)) throw new ArgumentException(Source);
             CreateDate = DateTime.UtcNow;
-            if (repositoryAccessor.RepositoryOf<Domain.FileContent>().Any(x =>x.Source == Source && x.SorceName == SourceName)) throw new FileAlreadyExistsException();
+            if (repositoryAccessor.RepositoryOf<Domain.FileContent>().Any(x =>x.Source == Source && x.SourceName == SourceName)) throw new FileAlreadyExistsException();
             var files = repositoryAccessor.RepositoryOf<Domain.FileContent>();
             var newFile = new Domain.FileContent
             {
                 Approved = true,
                 Data = FileContent,
                 Source = Source,
-                SorceName = SourceName,
+                SourceName = SourceName,
                 MimeType = MimeType,
                 CreateDate = CreateDate,
                 LastModify = CreateDate,
             };
-            if(files.Any(x=>x.Source == Source && x.SorceName == SourceName)) throw new FileAlreadyExistsException();
+            if(files.Any(x=>x.Source == Source && x.SourceName == SourceName)) throw new FileAlreadyExistsException();
             files.Add(newFile);
             IdOfTheNewFile = newFile.Id;
         }

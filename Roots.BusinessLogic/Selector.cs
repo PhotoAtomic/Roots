@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Roots.BusinessLogic
 {
-    public abstract class Selector<T>
+    public abstract class Extractor<T>
     {
         protected internal T Extract(ReadOnlyRepositoryAccessor repositoryAccessor)
         {

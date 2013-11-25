@@ -45,7 +45,7 @@ namespace Roots.BusinessLogic
 
 
 
-        public TResult Apply<TResult>(Selector<TResult> selector)
+        public TResult Apply<TResult>(Extractor<TResult> selector)
         {
             using (var uow = factory.CreateNew(IsolationLevel.ReadItsOwnWrite))
             {
