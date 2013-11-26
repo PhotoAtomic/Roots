@@ -28,6 +28,7 @@ namespace Roots.SupportedFileTypes
 
         public static implicit operator String(FileType fileType)
         {
+            if (object.ReferenceEquals(fileType, null)) return null;
             return fileType.MimeType;
         }
 
@@ -57,6 +58,20 @@ namespace Roots.SupportedFileTypes
             if (Object.ReferenceEquals(a, null) && b == null) return true;
             if (Object.ReferenceEquals(a, null) ^ b == null) return false;
             return !string.Equals(b, a.MimeType, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public static bool operator == (FileType a, FileType b)
+        {
+            if (Object.ReferenceEquals(a, b)) return true;
+            if (Object.ReferenceEquals(a, null) ^ Object.ReferenceEquals(b, null)) return false;
+            return string.Equals(a.MimeType, b.MimeType, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public static bool operator !=(FileType a, FileType b)
+        {
+            if (!Object.ReferenceEquals(a, b)) return true;
+            if (Object.ReferenceEquals(a, null) ^ Object.ReferenceEquals(b, null)) return true;
+            return !string.Equals(a.MimeType, b.MimeType, StringComparison.InvariantCultureIgnoreCase);
         }
 
         public override bool Equals(object obj)

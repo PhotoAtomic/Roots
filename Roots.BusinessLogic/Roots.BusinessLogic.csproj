@@ -54,6 +54,7 @@
     <Compile Include="MutatorAlreadyAppliedException.cs" />
     <Compile Include="Mutator.cs" />
     <Compile Include="Mutators\ExistingFileRenamer.cs" />
+    <Compile Include="Mutators\ExistingFileTypeChanger.cs" />
     <Compile Include="Mutators\ExistingFileUpdater.cs" />
     <Compile Include="Exceptions\FileAlreadyExistsException.cs" />
     <Compile Include="Mutators\FileRemover.cs" />

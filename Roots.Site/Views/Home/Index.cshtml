@@ -5,14 +5,12 @@
 @section scripts{
 
 
-    @Scripts.Render("~/Generated/Index","~/bundles/angularjs", "~/signalr/hubs", "~/bundles/treeview", "~/scripts/controllers/home.js")
+    @Scripts.Render("~/Generated/Index", "~/bundles/angularjs", "~/signalr/hubs", "~/bundles/treeview", "~/scripts/controllers/home.js", "~/scripts/controllers/upload.js")
     @Scripts.Render("/Scripts/marvin4js/gui/gui.nocache.js")
     @Styles.Render("/bundles/treeviewcs")
     
 }
-@*<script language="javascript">
-        @Html.Action("Index", "Generated")
-</script>*@
+
 
 <div class="jumbotron">
     <img src="~/Images/aptuitlogo.png" />
@@ -47,14 +45,39 @@
                     </tr>
                 </thead>
 
-                <tbody ng-cloak>
+                <tbody >
                     <tr ng-repeat="item in items" >
                         
                         <td class="col-lg-2" ng-switch="item.MimeType">
-                            <div class="well well-lg text-center" ng-switch-when="@MimeTypes.PlainText.MimeType">
-                                <h1 class="glyphicon glyphicon-file"></h1>
+
+
+                            <img class="img-thumbnail" ng-cloak ng-switch-when="@MimeTypes.ImageJPG.MimeType" ng-src="{{item.image}}" />
+                            
+                            <div ng-switch-when="@MimeTypes.Chemical.MimeType">
+                                <img class="img-thumbnail" ng-show="item.loaded" ng-cloak ng-src="{{item.image}}" />
+                                <div class="well well-lg text-center" ng-hide="item.loaded">
+                                    <div class="fa fa-spinner fa-spin fa-3x"></div>
+                                    <h3>Loading...</h3>
+                                </div>
                             </div>
-                            <img class="img-thumbnail" ng-cloak ng-switch-default ng-src="{{item.image}}" />
+                            <div class="well well-lg text-center" ng-switch-default>
+                                
+                                <div class="fa fa-question-circle fa-4x"></div>
+                                
+                                <h3>File</h3>
+                            </div>
+                            <div class="well well-lg text-center" ng-switch-when="@MimeTypes.PlainText.MimeType">
+                                <div class="fa fa-file-text fa-4x"></div>
+                                <h3>Text</h3>
+                            </div>
+                            <div class="well well-lg text-center" ng-switch-when="@MimeTypes.PDF.MimeType">
+                                <div class="fa fa-file fa-4x"></div>
+                                <h3>PDF</h3>
+                            </div>
+                            <div class="well well-lg text-center" ng-switch-when="@MimeTypes.RootsPlaceholder.MimeType">
+                                <div class="fa fa-file-o fa-4x"></div>
+                                <h3>placeholder</h3>
+                            </div>
                         </td>
 
                         <td class="col-lg-9">
@@ -62,7 +85,7 @@
                         </td>
 
                         <td class="col-lg-1">
-                            <a class="btn btn-default" href="/api/content/{{item.Id}}">
+                            <a class="btn btn-default" ng-href="/api/content/{{item.Id}}" ng-hide="item.MimeType == '@MimeTypes.RootsPlaceholder.MimeType'">
                                 <span class="glyphicon glyphicon-download"></span> Download
                             </a>
                         </td>
@@ -78,7 +101,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="uploadModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="uploadModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ng-controller="UploadController">
     <div class=" modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -93,7 +116,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="submit" class="btn btn-primary" ng-click="send()">Save changes</button>
                 </div>
             </form>
         </div>

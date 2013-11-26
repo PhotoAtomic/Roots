@@ -33,7 +33,7 @@ namespace Roots.Site.WebApi
             string mimeType = file.MimeType;
             if (mimeType == MimeTypes.OctetStream)
             {
-                mimeType = MimeTypes.GetFileType(Path.GetExtension(file.Name));
+                mimeType = MimeTypes.GetFileTypeForExtension(Path.GetExtension(file.Name));
             }
 
             var fileAdded = new NewFileUploader

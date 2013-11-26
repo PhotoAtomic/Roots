@@ -27,6 +27,7 @@ function HomeController($scope, $http) {
         $scope.$apply(function () {
             $scope.items = fileItems;
             $.each($scope.items, function () {
+                this.loaded = false;
                 $scope.Fill(this,$http);
             });
         });
@@ -35,13 +36,14 @@ function HomeController($scope, $http) {
     notifier.client.itemAdded = function (item) {
         $scope.$apply(function () {
             $scope.items.push(item);
+            item.loaded = false;
             $scope.Fill(item,$http);
         });
     }
 
     notifier.client.itemRenamed = function (id, newName) {
         $scope.$apply(function () {
-            var item = $linq($scope.items).single(function (x) { return x.Id == id });
+            var item = $linq($scope.items).single(function (x) { return x.Id == id });            
             item.Name = newName;
         });
     }
@@ -52,12 +54,12 @@ function HomeController($scope, $http) {
         });
     }
 
-
     notifier.client.itemUpdated = function (item) {
         $scope.$apply(function () {
             var itemToUpdate = $linq($scope.items).single(function (x) { return x.Id == item.Id });
-            itemToUpdate.Content = item.Content;
+            //itemToUpdate.Content = item.Content;
             itemToUpdate.MimeType = item.MimeType;
+            itemToUpdate.loaded = false;
             $scope.Fill(itemToUpdate,$http);
         });
     }
@@ -70,11 +72,12 @@ function HomeController($scope, $http) {
                 .success(function (data, status, headers, config) {                    
                     var imgData = marvin.ImageExporter.molToDataUrl(data);
                     item.image = imgData;
+                    item.loaded = true;
                 });                
             });
         }
         else if (item.MimeType == MimeTypes.ImageJPG) {
-            item.image = "/api/preview/" + item.Id + "/?w=192&h=192";
+            item.image = "/api/preview/" + item.Id + "/?w=200&h=200";
         }
     };
 

@@ -21,12 +21,25 @@ namespace Roots.Site.Hubs
             domain.Apply(new MutationListener<NewFileUploader>(NotifyNewFileUploaded));
             domain.Apply(new MutationListener<ExistingFileContentUpdated>(NotifyExistingFileUpdated));
             domain.Apply(new MutationListener<ExistingFileRenamer>(NotifyExistingFileRenamed));
+            domain.Apply(new MutationListener<ExistingFileTypeChanger>(NotifyExistingFileTypeChanged));
             domain.Apply(new MutationListener<FileRemover>(NotifyExistingFileRemoved));
         }
 
         private static void NotifyExistingFileRemoved(FileRemover fileRemoved)
         {
             context.Value.Clients.All.itemRemoved(fileRemoved.IdOfTheRemovedFiles);
+        }
+
+
+        private static void NotifyExistingFileTypeChanged(ExistingFileTypeChanger typeChanged)
+        {
+            var filePreview = new FilePreview
+            {
+                Id = typeChanged.IdOfTheChangedFile,
+                Name = Path.GetFileNameWithoutExtension(typeChanged.SourceName),
+                MimeType = typeChanged.NewType,
+            };
+            context.Value.Clients.All.itemUpdated(filePreview); 
         }
 
         private static void NotifyExistingFileRenamed(ExistingFileRenamer fileRenamed)
@@ -41,8 +54,7 @@ namespace Roots.Site.Hubs
                 Id = fileUploaded.IdOfUpdatedFile,
                 Name = Path.GetFileNameWithoutExtension(fileUploaded.SourceName),
                 MimeType = fileUploaded.MimeType,
-            };
-           // if (fileUploaded.MimeType == MimeTypes.Chemical) filePreview.Content = fileUploaded.FileContent;
+            };           
             context.Value.Clients.All.itemUpdated(filePreview);            
         }
 

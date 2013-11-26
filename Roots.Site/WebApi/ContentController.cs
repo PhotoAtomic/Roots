@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Net.Http.Headers;
+using Roots.SupportedFileTypes;
 
 namespace Roots.Site.WebApi
 {
@@ -31,6 +32,8 @@ namespace Roots.Site.WebApi
             var file = domain.Apply(getFile);
 
             if (file == null) return new HttpResponseMessage(HttpStatusCode.NotFound);
+
+            if (file.MimeType == MimeTypes.RootsPlaceholder) return new HttpResponseMessage(HttpStatusCode.NoContent);
 
             var response = new HttpResponseMessage(HttpStatusCode.OK);
 
@@ -112,7 +115,7 @@ namespace Roots.Site.WebApi
             {
                 Source  = source,
                 OldSourceName = id,
-                NewSourceName = newName,
+                NewSourceName = newName,                
             };
             try
             {

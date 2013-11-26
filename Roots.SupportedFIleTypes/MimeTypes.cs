@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -15,9 +16,18 @@ namespace Roots.SupportedFileTypes
         public static readonly FileType PlainText = new FileType("text/plain",".txt");
         public static readonly FileType ImageJPG = new FileType("image/jpeg",".jpg",".jpeg");
 
-        public static FileType GetFileType(string extension)
+
+        public static FileType GetFileType(string path)
         {
-            return GetAllFileTypes().FirstOrDefault(x => x.MatchExtension(extension));
+            return GetFileTypeForExtension(Path.GetExtension(path));
+        }
+
+        public static FileType GetFileTypeForExtension(string extension)
+        {
+            
+            var mimeType = GetAllFileTypes().FirstOrDefault(x => x.MatchExtension(extension));
+            if (object.ReferenceEquals(mimeType,null) ) return OctetStream;
+            return mimeType;
         }
 
         public static IEnumerable<FileType> GetAllFileTypes()

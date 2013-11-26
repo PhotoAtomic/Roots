@@ -76,16 +76,32 @@ namespace Roots.FileSystemService
         private void SendRename(Track track)
         {
             var oldName = FileTracker.MakeMachinePath(track.OriginalFullPath);
-            var newName = FileTracker.MakeMachinePath(track.FullPath);            
+            var newName = FileTracker.MakeMachinePath(track.FullPath);
 
-            var result = client.PutAsync(
+            string mimeType = GetMimeType(newName);
+
+            client.PutAsync(
                 "Content", 
                 new 
                 { 
                     Source = source,
                     Id = oldName, 
-                    NewName = newName 
-                }).Result;
+                    NewName = newName,
+                    //MimeType = mimeType,
+                }).Wait();
+
+            if (MimeTypes.GetFileType(oldName) != MimeTypes.GetFileType(newName))
+            {
+                client.PutAsync(
+                    "Type",
+                    new
+                    {
+                        Source = source,
+                        Id = newName,                                                
+                        NewType = mimeType,
+                    }).Wait();
+            }
+
         }
 
         private void SendCreate(Track track)
@@ -124,7 +140,7 @@ namespace Roots.FileSystemService
         private static string GetMimeType(string fileName)
         {
             var extension = Path.GetExtension(fileName);
-            string mimeType = MimeTypes.GetFileType(extension) ?? MimeTypes.OctetStream;
+            string mimeType = MimeTypes.GetFileTypeForExtension(extension) ?? MimeTypes.OctetStream;
             return mimeType;
         }
 
