@@ -20,12 +20,12 @@ namespace Roots.Site.Parts
         {
             var connectionString = WebConfigurationManager.ConnectionStrings["RootsDatabase"];
             if (connectionString == null) throw new Exception("connection string RootsDatabase not provided in web.config");
-            if (connectionString.ProviderName == "RavenDb")
+            //if (connectionString.ProviderName == "RavenDb")
             {
                 factory = new RavenDbUnitOfWorkFactory(connectionString.ConnectionString);
                 return;
             }
-            throw new Exception("Provider not supported: just ravendb provider is supported at the moment, sorry");
+            //throw new Exception("Provider not supported: just ravendb provider is supported at the moment, sorry");
         }
 
         public IUnitOfWork CreateNew(IsolationLevel isolationLevel = IsolationLevel.None)
