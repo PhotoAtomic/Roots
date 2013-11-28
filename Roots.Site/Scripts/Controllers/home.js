@@ -81,7 +81,7 @@ function HomeController($scope, $http) {
         }
     };
 
-    $.connection.hub.start();
+    $.connection.hub.start({ transport: [/*'webSockets',*/ 'forverFrame', 'serverSentEvents', 'longPolling'] });
 
     
 }
