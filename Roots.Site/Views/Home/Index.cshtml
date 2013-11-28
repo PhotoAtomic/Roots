@@ -49,8 +49,6 @@
                     <tr ng-repeat="item in items" >
                         
                         <td class="col-lg-2" ng-switch="item.MimeType">
-
-
                             <img class="img-thumbnail" ng-cloak ng-switch-when="@MimeTypes.ImageJPG.MimeType" ng-src="{{item.image}}" />
                             
                             <div ng-switch-when="@MimeTypes.Chemical.MimeType">
@@ -60,28 +58,64 @@
                                     <h3>Loading...</h3>
                                 </div>
                             </div>
-                            <div class="well well-lg text-center" ng-switch-default>
-                                
-                                <div class="fa fa-question-circle fa-4x"></div>
-                                
+
+                            <div class="well well-lg text-center" ng-switch-default>                               
+                                <div class="fa fa-question-circle fa-4x"></div>                                
                                 <h3>File</h3>
                             </div>
+
                             <div class="well well-lg text-center" ng-switch-when="@MimeTypes.PlainText.MimeType">
                                 <div class="fa fa-file-text fa-4x"></div>
                                 <h3>Text</h3>
                             </div>
+
                             <div class="well well-lg text-center" ng-switch-when="@MimeTypes.PDF.MimeType">
                                 <div class="fa fa-file fa-4x"></div>
                                 <h3>PDF</h3>
                             </div>
+
+                            <div class="well well-lg text-center" ng-switch-when="@MimeTypes.Json.MimeType">
+                                <div class="fa fa-table fa-4x"></div>
+                                <h3>Structured data</h3>
+                            </div>
+
                             <div class="well well-lg text-center" ng-switch-when="@MimeTypes.RootsPlaceholder.MimeType">
                                 <div class="fa fa-file-o fa-4x"></div>
                                 <h3>placeholder</h3>
                             </div>
                         </td>
 
-                        <td class="col-lg-9">
-                            <h5>{{item.Name}}</h5>
+                        <td class="col-lg-9" ng-switch="item.MimeType">
+
+                            <div ng-switch-when="@MimeTypes.Json.MimeType">
+                                <div ng-repeat="entity in item.content" ng-switch="entity.Type">
+                                    <div class="col-lg-12" ng-switch-when="@MimeTypes.Table.MimeType">
+                                        <h3>{{entity.Value.Name}}</h3>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th ng-repeat="hname in entity.Value.Headers">
+                                                        {{hname}}
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="row in entity.Value.Rows">
+                                                    <td ng-repeat="cell in row">
+                                                        {{cell}}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div ng-switch-when="@MimeTypes.Chart.MimeType">
+                                        D3js chart will appear here
+                                    </div>
+                                    <br />
+                                </div>                                
+                            </div>
+
+                            <h5 ng-switch-default>{{item.Name}}</h5>
                         </td>
 
                         <td class="col-lg-1">

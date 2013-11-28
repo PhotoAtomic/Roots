@@ -15,6 +15,10 @@ namespace Roots.SupportedFileTypes
         public static readonly FileType PDF = new FileType("application/pdf",".pdf");
         public static readonly FileType PlainText = new FileType("text/plain",".txt");
         public static readonly FileType ImageJPG = new FileType("image/jpeg",".jpg",".jpeg");
+        public static readonly FileType Json = new FileType("application/json", ".json");
+        public static readonly FileType Table = new FileType("application/roots-table");
+        public static readonly FileType Chart = new FileType("application/roots-chart");
+
 
 
         public static FileType GetFileType(string path)

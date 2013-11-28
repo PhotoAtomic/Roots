@@ -79,6 +79,12 @@ function HomeController($scope, $http) {
         else if (item.MimeType == MimeTypes.ImageJPG) {
             item.image = "/api/preview/" + item.Id + "/?w=200&h=200";
         }
+        else if (item.MimeType == MimeTypes.Json) {
+            $http({ method: "GET", url: "/api/content/" + item.Id })
+                .success(function (data, status, headers, config) {
+                    item.content = data;
+                });
+        }
     };
 
     $.connection.hub.start({ transport: ['forverFrame', 'serverSentEvents', 'longPolling', 'webSockets'] });
